@@ -10,6 +10,27 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+const folders = document.querySelectorAll('.folder');
+folders.forEach(folder => {
+    folder.addEventListener('click', () => {
+        console.log("Dossier cliqué :", folder.dataset.section);
+        const section = folder.dataset.section;
+        
+        if (section === 'contact') {
+            console.log("Ouverture de la fenêtre Contact");
+            const stack = document.querySelector('.contact-window-stack');
+            if (stack) {
+                stack.style.display = 'block';
+                stack.querySelectorAll('.contact-window').forEach((win, index) => {
+                    win.style.display = 'block';
+                    win.style.zIndex = 3 - index;
+                });
+            } else {
+                console.warn("Élément .contact-window-stack non trouvé !");
+            }
+        }
+    });
+});
 
 document.addEventListener("DOMContentLoaded", function () {
     setTimeout(function () {
