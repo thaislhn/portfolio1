@@ -44,12 +44,10 @@ h1 {
 
 .folder-grid{
     color: #000000;
-
-
 }
 
 .folder span {
-    font-family: 'Dreamer TM';
+    font-family: 'dreamer tm';
     font-size: 23px !important;
     letter-spacing: 1px;
 }
@@ -84,8 +82,8 @@ h1 {
     border: 2px solid #000000;
     box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);    
     position: absolute;
-    top: 25%;
-    left: 90%;
+    top: 15%;
+    left: 50%;
     transform: translate(-50%, -50%); /* Centre parfaitement */
 
 }
@@ -305,6 +303,7 @@ h1 {
     top: 0;
     left: 0;
     z-index: 3;
+    
 }
 
 .contact-window:nth-child(2) {
