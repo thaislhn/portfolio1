@@ -1,10 +1,13 @@
 @font-face {
     font-family: 'PP Mondwest';
     src: url('PPMondwest-Regular.otf') format('opentype');
-    font-weight: normal;
-    font-style: normal;
+   
 }
 
+@font-face {
+    font-family: 'Dreamer TM';
+    src: url('DreamerTM-Regular.ttf') format('truetype');
+}
 
 * {
     margin: 0;
@@ -38,7 +41,7 @@ h1 {
 }
 
 .folder span {
-    font-family: 'dreamer tm';
+    font-family: 'Dreamer TM';
     font-size: 23px !important;
     letter-spacing: 1px;
 }
