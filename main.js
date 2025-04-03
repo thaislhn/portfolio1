@@ -2,51 +2,23 @@ document.addEventListener("DOMContentLoaded", function () {
     setTimeout(function () {
         let popup = document.getElementById("popup");
         popup.style.display = "flex"; // Affiche le pop-up après le délai
-    }, Math.floor(Math.random() * (1000 - 10000) + 1000)); // Délai aléatoire entre 10 et 15 sec
+    }, Math.floor(Math.random() * (25000 - 20000) + 20000)); // Délai aléatoire entre 10 et 15 sec
 
     // Fermer le pop-up en cliquant sur le bouton
     document.querySelector(".close-btn").addEventListener("click", function () {
         document.getElementById("popup").style.display = "none";
     });
 });
-
-const folders = document.querySelectorAll('.folder');
-folders.forEach(folder => {
-    folder.addEventListener('click', () => {
-        console.log("Dossier cliqué :", folder.dataset.section);
-        const section = folder.dataset.section;
-        
-        if (section === 'contact') {
-            console.log("Ouverture de la fenêtre Contact");
-            const stack = document.querySelector('.contact-window-stack');
-            if (stack) {
-                stack.style.display = 'block';
-                stack.querySelectorAll('.contact-window').forEach((win, index) => {
-                    win.style.display = 'block';
-                    win.style.zIndex = 3 - index;
-                });
-            } else {
-                console.warn("Élément .contact-window-stack non trouvé !");
-            }
-        }
-    });
-});
-
-document.addEventListener("DOMContentLoaded", function () {
-    setTimeout(function () {
-        let popup = document.getElementById("popup");
-        popup.style.display = "flex"; // Affiche le pop-up après le délai
-    }, Math.floor(Math.random() * (15000 - 10000) + 10000)); // Délai aléatoire entre 10 et 15 sec
-
-    // Fermer le pop-up en cliquant sur le bouton
-    document.querySelector(".close-btn").addEventListener("click", function () {
-        document.getElementById("popup").style.display = "none";
-    });
-});
-
 
 document.addEventListener('DOMContentLoaded', () => {
- 
+    
+    // Fermer toutes les fenêtres SAUF search au chargement
+    const allWindows = document.querySelectorAll('.section-window, .about-window, .projects-window, .cv-window, .contact-window');
+    allWindows.forEach(window => {
+        window.style.display = 'none';
+    });
+
+
     
     // Masquer toutes les stacks SAUF search au chargement
     const allStacks = document.querySelectorAll('.about-window-stack, .project-window-stack, .cv-window-stack, .contact-window-stack');
@@ -63,7 +35,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Rendre les fenêtres draggables
     const windows = document.querySelectorAll('.window, .section-window, .about-window, .projects-window, .cv-window, .contact-window, .search-window');
     windows.forEach(makeWindowDraggable);
-
 
 
     
@@ -107,6 +78,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    
 
     // Configurer les boutons de fermeture (sauf pour search)
     const closeButtons = document.querySelectorAll('.close-button');
@@ -199,6 +172,7 @@ function makeWindowDraggable(window) {
     }
 }
 
+
 const projects = [
     {
         id: 1,
@@ -258,10 +232,41 @@ const projects = [
         description: "Un lecteur de musique interactif inspiré du design Mac, avec une interface élégante et des animations fluides. Ce projet combine esthétique rétro et fonctionnalités modernes.",
         image: "https://i.pinimg.com/736x/a6/f6/a5/a6f6a56d4ccbda600e2b1b8eb2375b63.jpg",
         type: "interactive",
-        
-        
+        playerContent: {
+            songs: [
+                {
+                    artist: 'FKA Twigs',
+                    song: 'Oh my love',
+                    image: 'https://cdn-images.dzcdn.net/images/cover/d68c5560e7e839491a10cfcb1a01925c/0x1900-000000-80-0-0.jpg'
+                },
+                {
+                    artist: 'Kali Uchis, SZA',
+                    song: 'Fue mejor',
+                    image: 'https://i.scdn.co/image/ab67616d00001e026a7b60cda376bb823002d80a'
+                },
+                {
+                    artist: 'Jhené Aiko',
+                    song: 'When we love',
+                    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdK0bAqXQl1GNbAXdvDOHrULByxH0-P_Z03g&s'
+                },
+                {
+                    artist: 'Alicia Keys',
+                    song: 'Felling U, Feeling Me (interlude)',
+                    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPaKiF4Z2CxVXp6EfxN4J4PGXQj2yQZEXaCA&s'
+                },
+                {
+                    artist: 'Erykah Badu',
+                    song: '...& On',
+                    image: 'https://i.scdn.co/image/ab67616d00001e020d934cb462fae5a26f829efb'
+                }
+            ]
+        }
     }
 ];
+
+
+
+
 
 function createProjectCards() {
     const projectsGrid = document.getElementById('projects-grid');
