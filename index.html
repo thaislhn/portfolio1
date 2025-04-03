@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -8,6 +9,10 @@
 </head>
 <body>
 
+    <video id="background-video" autoplay loop muted playsinline>
+        <source src="video/ma-video.mp4" type="video/mp4">
+    </video>
+
     <div class="desktop">
         <div class="window" id="main-window">
             <div class="window-header">
@@ -17,32 +22,31 @@
             <div class="window-content">
                 <div class="folder-grid">
                     <div class="folder" data-section="about">
-                        <svg class="folder-icon" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
-                        </svg>
+                        <img class="folder-icon" src="image/about.svg" alt="About">
                         <span>About</span>
                     </div>
                     <div class="folder" data-section="projects">
-                        <svg class="folder-icon" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
-                        </svg>
+                        <img class="folder-icon" src="image/projects.svg" alt="Projects">
                         <span>Projects</span>
                     </div>
                     <div class="folder" data-section="cv">
-                        <svg class="folder-icon" width="640" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
-                        </svg>
+                        <img class="folder-icon" src="image/cv.svg" alt="CV">
                         <span>CV</span>
                     </div>
                     <div class="folder" data-section="contact">
-                        <svg class="folder-icon" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
-                        </svg>
+                        <img class="folder-icon" src="image/contact.svg" alt="Contact">
                         <span>Contact</span>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+
+</body>
+</html>
+
+</body>
+</html>
 
         <!-- About Windows Stack -->
         <div class="about-window-stack">
@@ -56,8 +60,8 @@
                     <br>
                     <p>Bonjour,
                     <br>
-                        je m'appelle Thaïs L'Hocine, étudiante à
-                        l'école des Gobelins en DN MADE Design numérique
+                        Je m'appelle Thaïs L'Hocine, étudiante à
+                         Gobelins Paris en DN MADE Design numérique
                         spécialité code.
                         </p>
                         <p>Je suis à la recherche d'une
@@ -147,10 +151,11 @@
                     <button class="close-button">×</button>
                 </div>
                 <div class="window-content">
-                    <h2>Curriculum Vitae</h2>
+                    <h2>Qui suis-je ?</h2>
                     <div class="cv-content">
                         <h3>Formation</h3>
-                        <p>DN MADE Design - École des Gobelins</p>
+                        <p>DN MADE Design </p>
+                            Gobelins Paris </p>
 
                         <a href="/assets/cv-thais-lhocine.pdf" download class="download-cv-btn">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -158,7 +163,7 @@
                                 <polyline points="7 10 12 15 17 10"/>
                                 <line x1="12" y1="15" x2="12" y2="3"/>
                             </svg>
-                            Télécharger mon CV
+                            Mon CV.pdf
                         </a>
                     </div>
                 </div>
@@ -171,8 +176,8 @@
                 <div class="window-content">
                     <h2>Curriculum Vitae</h2>
                     <div class="cv-content">
-                        <h3>Formation</h3>
-                        <p>DN MADE Design - École des Gobelins</p>
+                        <p>DN MADE Design </p>
+                            Gobelins Paris </p>
 
                         <a href="/assets/cv-thais-lhocine.pdf" download class="download-cv-btn">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -180,7 +185,7 @@
                                 <polyline points="7 10 12 15 17 10"/>
                                 <line x1="12" y1="15" x2="12" y2="3"/>
                             </svg>
-                            Télécharger mon CV
+                            Mon CV.pdf
                         </a>
                     </div>
                 </div>
@@ -193,16 +198,15 @@
                 <div class="window-content">
                     <h2>Curriculum Vitae</h2>
                     <div class="cv-content">
-                        <h3>Formation</h3>
-                        <p>DN MADE Design - École des Gobelins</p>
-
+                        <p>DN MADE Design </p>
+                            Gobelins Paris </p>
                         <a href="/assets/cv-thais-lhocine.pdf" download class="download-cv-btn">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                                 <polyline points="7 10 12 15 17 10"/>
                                 <line x1="12" y1="15" x2="12" y2="3"/>
                             </svg>
-                            Télécharger mon CV
+                            Mon CV.pdf
                         </a>
                     </div>
                 </div>
@@ -242,6 +246,7 @@
                     </div>
                 </div>
             </div>
+            
             <div class="contact-window section-window">
                 <div class="window-header">
                     <div class="window-title">Contact</div>
@@ -294,10 +299,7 @@
                             07 66 66 76 87
                         </a>
                         <a href="https://www.linkedin.com/in/thaïs-l'hocine-795747280/" target="_blank" rel="noopener noreferrer" class="contact-link">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
-                                <rect width="4" height="12" x="2" y="9"/>
-                                <circle cx="4" cy="4" r="2"/>
+                                
                             </svg>
                             Thaïs L'Hocine
                         </a>
@@ -306,34 +308,31 @@
             </div>
         </div>
 
-        <!-- Search Windows Stack -->
-        <div class="search-window-stack">
+
+        
+        <div class="search-window-stack" id="job-popup" >
             <div class="search-window">
                 <div class="window-header">
                     <div class="window-title">http://www.job-search.com</div>
                     <button class="close-button">×</button>
                 </div>
                 <div class="content">
-                    <b>Looking for developper </b><br>
-                    + Nonpaid <br>
-                    + 3 months <br>
-                    + Must have a degree <br>
-                    + Ability to multitask
+                    <b> OUii</b><br>
+                    
                 </div>
             </div>
-            <div class="search-window">
+            
+            <div class="search-window" id="job-popup" >
                 <div class="window-header">
                     <div class="window-title">http://www.job-search.com</div>
                     <button class="close-button">×</button>
                 </div>
                 <div class="content">
                     <b>Looking for developper </b><br>
-                    + Nonpaid <br>
-                    + 3 months <br>
-                    + Must have a degree <br>
-                    + Ability to multitask
+                    
                 </div>
             </div>
+        
             <div class="search-window">
                 <div class="window-header">
                     <div class="window-title">http://www.job-search.com</div>
@@ -341,13 +340,11 @@
                 </div>
                 <div class="content">
                     <b>Looking for developper </b><br>
-                    + Nonpaid <br>
-                    + 3 months <br>
-                    + Must have a degree <br>
-                    + Ability to multitask
+                   
                 </div>
             </div>
         </div>
+
 
         <!-- Project Details Container -->
         <div id="project-details"></div>
@@ -355,15 +352,6 @@
     <script src="projects.js"></script>
     <script src="main.js"></script>
 
-  
-   <div class="desktop">
-        <video id="background-video" autoplay loop muted playsinline>
-            <source src="video/ma-video.mp4" type="video/mp4">
-        </video>
-        <div class="content">
-        </div>
-    </div>
-    
 
 
     <div id="popup" class="popup">
@@ -375,5 +363,8 @@
     </div>
 
     
+    
 </body>
 </html>
+
+
