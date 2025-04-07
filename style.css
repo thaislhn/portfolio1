@@ -88,11 +88,10 @@ h1 {
 }
 
 
-
 .window {
     background: #ffffff;
     width: 90%;
-    max-width: 550px;
+    width: 550px;
     overflow: hidden;
     border: 2px solid #000000;
     box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);    
@@ -141,7 +140,8 @@ h1 {
 .folder-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    
+    width: 500px;
+    height: 130px;
 }
 
 .folder {
@@ -216,31 +216,31 @@ h1 {
     z-index: 1;
 }
 
-/* Projects Windows Stack */
 .project-window-stack {
     position: absolute;
     top: 250px;
     left: 50%;
     transform: translateX(-50%);
     width: 500px;
-    height: 700px;
+    height: 550px;
     z-index: 20;
 }
 
 .projects-window {
     width: 100%;
     height: 100%;
-    position: absolute;
+    position: absolute; 
     border: 2px solid #000000;
     box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
     background: white;
-    
+    box-sizing: border-box; /* Ajout important */
+    overflow: hidden; /* Empêche le contenu de déborder */
 }
 
 .projects-window:nth-child(1) {
     top: 0;
     left: 0;
-    z-index: 3;
+    z-index: 4;
 }
 
 .projects-window:nth-child(2) {
@@ -255,6 +255,12 @@ h1 {
     z-index: 1;
 }
 
+/* Modification de cette règle */
+.projects-window .window-content {
+    height: calc(100% - 30px); /* Utilisez height au lieu de max-height */
+    overflow: auto; /* Permet le défilement si le contenu est trop long */
+    box-sizing: border-box;
+}
 /* CV Windows Stack */
 .cv-window-stack {
     position: absolute;
@@ -338,7 +344,7 @@ h1 {
     position: absolute;
     top: 10px;
     left: 10px;
-    width: 300px;
+    width: 200px;
     height: 200px;
     z-index: 1000;
     display: block !important;
@@ -436,19 +442,6 @@ h1 {
     transform: scale(1.05);
 }
 
-.video-indicator {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: rgba(0, 0, 0, 0.8);
-    color: white;
-    padding: 5px 10px;
-    border-radius: 15px;
-    font-size: 12px;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-}
 
 .project-info {
     padding: 20px;
@@ -670,36 +663,28 @@ h1 {
 
 /* Contenu du pop-up */
 .popup-content {
-    background: rgb(255, 58, 58); /* Couleur bien flashy */
-    color: white;
+    background: rgb(255, 58, 58);
+    color: transparent; /* Seulement pour le texte dans .popup-content */
+    -webkit-text-stroke: 1px white; /* Contour pour le texte principal */
     padding: 55px;
-    color: transparent; /* Rend l'intérieur du texte transparent */
-    -webkit-text-stroke: 1px white; /* Ajoute un contour blanc */
     text-align: center;
     font-size: 30px;
     box-shadow: 0px 0px 20px rgba(255, 0, 0, 0.8);
     transform: scale(1.1);
     transition: transform 0.3s ease;
-    
+    position: relative; /* Nécessaire pour positionner correctement la croix */
 }
 
-/* Effet quand la souris passe dessus */
-.popup-content:hover {
-    transform: scale(1.2);
-}
-
-/* Bouton de fermeture */
+/* Bouton de fermeture - À METTRE APRÈS .popup-content */
 .close-btn {
     position: absolute;
-    top: 2px;
+    top: 10px; /* Ajusté pour éviter le bord */
     right: 15px;
     font-size: 20px;
     cursor: pointer;
-    color: white;
+    color: white !important; /* Force la couleur blanche */
+    -webkit-text-stroke: 0 !important; /* Désactive le contour */
+    text-stroke: 0 !important;
+    z-index: 10; /* Au-dessus du contenu */
 }
-/* Ajoutez/modifiez ces règles */
-.projects-window .window-content {
-    overflow-y: auto;
-    max-height: calc(100% - 40px); /* 40px pour le header */
-    height: 100%;
-}
+
