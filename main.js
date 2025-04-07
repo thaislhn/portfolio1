@@ -178,16 +178,16 @@ const projects = [
         id: 1,
         title: "Court Métrage Pop Culture",
         shortDescription: "Court métrage sur la pop culture",
-        description: "Création d'un système de design complet pour une marque de mode éthique, mettant l'accent sur la durabilité et l'élégance intemporelle. Une approche holistique qui unifie l'identité visuelle à travers tous les points de contact.",
+        description: "Pour mon projet de fin de semestre, j'ai exploré l'impact de la pop culture sur différentes personnes à travers une série d'interviews. L'objectif ? Capturer comment les références culturelles - musique, films, séries, jeux vidéo - façonnent nos identités et nos interactions au quotidien. Le projet se compose de deux volets : Un court-métrage documentaire (en cours de finalisation) présentant des témoignages authentiques, monté avec des animations After Effects recréant l'interface  d'un iPod. Un site web conçu avec Cargo. Projet à suivre : le montage final sera partagé prochainement !",
         image: "https://i.pinimg.com/736x/f8/c5/5a/f8c55ae0bd8c62dd381306c580ab1fd4.jpg",
-        videoId: "dQw4w9WgXcQ",
+        videoId: "fqAScQgcX44",
         type: "video"
     },
     {
         id: 2,
         title: "Salle d'Arcade Memphis - Blender",
         shortDescription: "Modélisation 3D d'une salle d'arcade",
-        description: "Conception d'une application mobile pour un service de livraison local, privilégiant une expérience utilisateur fluide et intuitive. Un projet qui allie fonctionnalité et esthétique pour servir la communauté locale.",
+        description: "Dans le cadre d'un workshop d'une semaine, nous avons été amenés à créer un objet 3D inspiré du mouvement Memphis, j'ai donc réalisé une salle d'arcade. une fusion entre le design Memphis (années 80) et l'esthétique rétro des salles d'arcade (années 70-80).",
         image: "https://i.pinimg.com/736x/c9/fb/f7/c9fbf7ae24aa4d4aacc69b1e7fe9f734.jpg",
         videoId: "dQw4w9WgXcQ",
         type: "video"
@@ -196,7 +196,7 @@ const projects = [
         id: 3,
         title: "Le Fablab des Gobelins",
         shortDescription: "Découvrez le Fablab des Gobelins",
-        description: "Développement de l'identité visuelle pour un festival d'art contemporain, créant une expérience immersive qui transcende les médias traditionnels. Une fusion entre art classique et design moderne.",
+        description: "J'ai imaginé une manière simple et parlante de présenter notre FabLab à travers ce site : fab-blog.cargo.site. L'idée n'était pas de tout expliquer, mais de montrer concrètement ce qu'on y fait - des impressions 3D qui prennent forme, des découpes laser précises, des circuits électroniques qui s'éveillent. Le parti pris ? Une navigation intuitive où les réalisations parlent d'elles-mêmes. Pas de longs discours, juste l'essentiel : des visuels qui donnent envie de créer, des projets qui inspirent, le tout dans une interface épurée qui laisse la place à l'imagination. Ce projet reflète ma capacité à synthétiser une identité visuelle et à mettre en valeur un espace créatif sans surcharger le message.",
         image: "https://i.pinimg.com/736x/c9/fb/f7/c9fbf7ae24aa4d4aacc69b1e7fe9f734.jpg",
         videoId: "EhgghqJtQA8",
         type: "video"
@@ -205,7 +205,7 @@ const projects = [
         id: 4,
         title: "Photographie",
         shortDescription: "Découvrez mes photos",
-        description: "Exploration artistique à travers la photographie, capturant des moments uniques et des perspectives inattendues. Une collection d'images qui racontent des histoires et évoquent des émotions.",
+        description: "Je suis passionné par la photographie. À travers cet art, je trouve un moyen unique de m'exprimer et de partager ma vision du monde ainsi que ma sensibilité. La musique est une source inépuisable de mon inspiration. Elle nourrit ma créativité, stimule mon imagination et me pousse à explorer de nouveaux horizons. Chaque mélodie, chaque rythme est une invitation à la découverte et à l'exploration de moi-même ainsi que du monde qui m'entoure. Le cinéma a un impact profond sur moi et mon univers visuel car il me transporte dans des mondes imaginaires et me fait ressentir une émotion qui nourrit ma créativité. Les visuels et scènes esthétiques m'inspirent influencent ma perception du monde et ma vision artistique.",
         image: "https://i.pinimg.com/564x/79/4b/0f/794b0fff82b5959d1cdc64c29fd88b57.jpg",
         type: "photo-gallery",
         photos: [
@@ -220,8 +220,8 @@ const projects = [
     {
         id: 5,
         title: "Pochette CD",
-        shortDescription: "Conception d'une pochette de CD",
-        description: "Conception et mise en page d'un magazine digital interactif dédié à l'art contemporain. Integration d'éléments multimédias et d'une navigation intuitive pour une expérience de lecture immersive.",
+        shortDescription: "Design d'une pochette de CD",
+        description: "Conception et design d'une pochette de CD via InDesign, Ilusyrator et Photoshop",
         image: "https://i.pinimg.com/736x/44/d7/ef/44d7ef24279af92d74609d6885f6ffee.jpg",
         type: "image"
     },
@@ -229,8 +229,9 @@ const projects = [
         id: 6,
         title: "Music Player",
         shortDescription: "Lecteur de musique style Mac",
-        description: "Un lecteur de musique interactif inspiré du design Mac, avec une interface élégante et des animations fluides. Ce projet combine esthétique rétro et fonctionnalités modernes.",
+        description: "Un lecteur de musique interactif inspiré du design Mac, créer en HTML CSS & JS.",
         image: "https://i.pinimg.com/736x/a6/f6/a5/a6f6a56d4ccbda600e2b1b8eb2375b63.jpg",
+        videoId: "peeleiYAJrQ",
         type: "video"
         
     }
@@ -374,6 +375,15 @@ function createProjectDetailPages() {
 function showProjectDetail(projectId) {
     const detailPage = document.getElementById(`project-${projectId}`);
     if (detailPage) {
+        // Masquer temporairement la vidéo pour éviter les conflits de superposition
+        const video = document.getElementById('background-video');
+        if (video) {
+            video.style.opacity = '0';
+            setTimeout(() => {
+                video.style.opacity = '1';
+            }, 10);
+        }
+        
         detailPage.classList.add('active');
         document.body.style.overflow = 'hidden';
     }
