@@ -513,6 +513,12 @@ h1 {
     border: none;
 }
 
+.section-window .window-content {
+    overflow-y: auto; /* Active le défilement vertical */
+    max-height: calc(80vh - 40px); /* Réserve de l'espace pour le header */
+}
+
+
 .photo-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -665,7 +671,3 @@ h1 {
     color: white;
 }
 
-.section-window .window-content {
-    overflow-y: auto; /* Active le défilement vertical */
-    max-height: calc(80vh - 40px); /* Réserve de l'espace pour le header */
-}
