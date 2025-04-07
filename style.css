@@ -7,28 +7,6 @@
     font-display: swap;
 }
 
-@font-face {
-    font-family: 'Dreamer TM';
-    src: url('DreamerTM-Regular.woff2') format('woff2'),
-        url('DreamerTM-Regular.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'JF Dot Shinonome Gothic 14';
-    src: url('JF-Dot-Shinonome-14-Regular.eot');
-    src: local('JF Dot Shinonome Gothic 14 Regular'), local('JF-Dot-Shinonome-14-Regular'),
-        url('JF-Dot-Shinonome-14-Regular.eot?#iefix') format('embedded-opentype'),
-        url('JF-Dot-Shinonome-14-Regular.woff2') format('woff2'),
-        url('JF-Dot-Shinonome-14-Regular.woff') format('woff'),
-        url('JF-Dot-Shinonome-14-Regular.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
-
 
 * {
     margin: 0;
@@ -39,7 +17,7 @@
 
 
 body {
-    font-family: 'PP Mondwest', monospace;
+    font-family: 'PP Mondwest';
     font-size: 20px;
     background-color: #d2d2d2;
     height: 100vh;
