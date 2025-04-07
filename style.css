@@ -326,12 +326,13 @@ h1 {
     position: absolute;
     top: 10px;
     left: 10px;
-    width: 250px;
+    width: 300px;
     height: 200px;
     z-index: 1000;
     display: block !important;
-    padding: 4%
+    padding: 6%
 }
+
 
 #job-popup .content {
     overflow: hidden;
