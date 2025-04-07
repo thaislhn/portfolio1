@@ -670,4 +670,27 @@ h1 {
     cursor: pointer;
     color: white;
 }
+/* Ajoutez/modifiez ces règles */
+.projects-window .window-content {
+    overflow-y: auto;
+    max-height: calc(100% - 40px); /* 40px pour le header */
+    height: 100%;
+}
 
+.project-window-stack {
+    display: none; /* Caché par défaut */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    max-width: 800px;
+    height: 80vh;
+}
+
+.projects-window {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    overflow: hidden;
+}
