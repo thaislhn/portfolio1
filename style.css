@@ -1,3 +1,4 @@
+
 @font-face {
     font-family: 'PP Mondwest';
     src: url('PPMondwest-Regular.woff2') format('woff2'),
@@ -107,7 +108,7 @@ h1 {
 
 .window-title {
     color: transparent; /* Rend l'intérieur du texte transparent */
-    -webkit-text-stroke: 1px white; /* Ajoute un contour blanc */
+    -webkit-text-stroke: 1px rgb(0, 23, 81); /* Ajoute un contour blanc */
 }
 
 
@@ -333,10 +334,18 @@ h1 {
 }
 
 #job-popup .content {
-    display: flex;
-    justify-content: flex-end; /* Aligne le contenu à droite */
-    /* Ou pour décaler tout le bloc : */
+    overflow: hidden;
     margin-left: 10px;
+    top: 80px; /* Déplace le texte vers le bas */
+}
+
+
+#job-popup .content {
+    margin-top: 10px; /* Ajustez cette valeur (10px, 20px...) */
+}
+
+#search-window .content {
+    top: 80px; /* Déplace le texte vers le bas */
 }
 
 .search-window {
