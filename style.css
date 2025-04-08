@@ -1,8 +1,7 @@
 @font-face {
     font-family: 'PP Mondwest';
     src: url('PPMondwest-Regular.woff2') format('woff2'),
-         url('PPMondwest-Regular.woff') format('otf'),
-         url('PPMondwest-Regular.woff') format('woff');
+        url('PPMondwest-Regular.woff') format('woff');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
@@ -18,7 +17,7 @@
 
 
 body {
-    font-family: 'PP Mondwest';
+    font-family: 'JF Dot Shinonome Gothic 14', monospace;
     font-size: 20px;
     background-color: #d2d2d2;
     height: 100vh;
@@ -41,7 +40,7 @@ h1 {
 }
 
 .folder span {
-    font-family: 'PP Mondwest';
+    font-family: 'JF Dot Shinonome Gothic 14';
     font-size: 20px !important;
     letter-spacing: 1px;
 }
@@ -676,83 +675,52 @@ h1 {
 .project-detail-video-container {
     width: 100%;
     max-width: 800px;
-    position: relative;
-    padding-bottom: 56.25%; /* Ratio 16:9 */
-    height: 0;
-    overflow: hidden;
     background: #000;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
 }
 
-/* Style de la balise video */
+/* Style minimaliste pour la vidéo en boucle */
 .project-detail-video-container video {
-    position: absolute;
-    top: 0;
-    left: 0;
     width: 100%;
-    height: 100%;
-    border: none;
-    outline: none;
+    height: auto;
+    display: block;
+    /* Optimisation pour un rendu net */
+    image-rendering: crisp-edges;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    /* Cache tous les contrôles */
+    -webkit-media-controls {
+        display: none !important;
+    }
 }
 
-.project-detail-video-container video::-webkit-media-controls {
-    display: flex !important;
-    opacity: 1 !important;
-    background: transparent !important;
+/* Supprime tous les contrôles natifs */
+.project-detail-video-container video::-webkit-media-controls-enclosure {
+    display: none !important;
 }
 
 .project-detail-video-container video::-webkit-media-controls-panel {
-    background: rgba(0, 0, 0, 0.5) !important;
-    backdrop-filter: blur(5px);
-    border-radius: 0 0 8px 8px;
+    display: none !important;
 }
 
 .project-detail-video-container video::-webkit-media-controls-play-button,
-.project-detail-video-container video::-webkit-media-controls-mute-button {
-    color: white;
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 50%;
-    padding: 8px;
-}
-
+.project-detail-video-container video::-webkit-media-controls-mute-button,
+.project-detail-video-container video::-webkit-media-controls-timeline,
 .project-detail-video-container video::-webkit-media-controls-current-time-display,
-.project-detail-video-container video::-webkit-media-controls-time-remaining-display {
-    color: white;
-    font-family: 'Arial', sans-serif;
-    font-size: 12px;
-}
-
-.project-detail-video-container:hover video::-webkit-media-controls-panel {
-    opacity: 1;
-}
-
-.project-detail-video-container video:-webkit-full-screen {
-    border-radius: 0;
-    width: 100%;
-    height: 100%;
-    max-width: none;
+.project-detail-video-container video::-webkit-media-controls-time-remaining-display,
+.project-detail-video-container video::-webkit-media-controls-fullscreen-button {
+    display: none !important;
 }
 
 @media (max-width: 768px) {
     .project-detail-video-container {
         border-radius: 0;
-        padding-bottom: 56.25%; /* Conserver le ratio 16:9 */
     }
-
     .project-detail-video {
-        margin: 10px -15px; /* Supprimer les marges latérales */
+        margin: 10px -15px;
     }
-}
-
-@keyframes video-loading {
-    0% { background-color: #222; }
-    50% { background-color: #333; }
-    100% { background-color: #222; }
-}
-
-.project-detail-video-container.loading {
-    animation: video-loading 1.5s infinite ease-in-out;
 }
 
 .photo-gallery-container {
