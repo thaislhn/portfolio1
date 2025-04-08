@@ -232,7 +232,7 @@ const projects = [
         shortDescription: "Lecteur de musique style Mac",
         description: "Un lecteur de musique interactif inspiré du design Mac, créé en HTML CSS & JS.",
         image: "https://i.pinimg.com/736x/a6/f6/a5/a6f6a56d4ccbda600e2b1b8eb2375b63.jpg",
-        videoFile: "rec top music.mov",
+        videoFile: "rec top music (1)",
         type: "video"
     }
 ];
