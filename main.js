@@ -191,7 +191,7 @@ const projects = [
         shortDescription: "Découvrez le Fablab des Gobelins",
         description: "J'ai imaginé une manière simple et parlante de présenter notre FabLab à travers ce site : fab-blog.cargo.site. L'idée n'était pas de tout expliquer, mais de montrer concrètement ce qu'on y fait - des impressions 3D qui prennent forme, des découpes laser précises, des circuits électroniques qui s'éveillent. Le parti pris ? Une navigation intuitive où les réalisations parlent d'elles-mêmes. Pas de longs discours, juste l'essentiel : des visuels qui donnent envie de créer, des projets qui inspirent, le tout dans une interface épurée qui laisse la place à l'imagination. Ce projet reflète ma capacité à synthétiser une identité visuelle et à mettre en valeur un espace créatif sans surcharger le message.",
         image: "https://i.pinimg.com/736x/c9/fb/f7/c9fbf7ae24aa4d4aacc69b1e7fe9f734.jpg",
-        videoFile: "fablab.mov",
+        videoFile: "fablab.mp4",
         type: "video"
     },
     {
