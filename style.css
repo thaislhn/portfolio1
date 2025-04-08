@@ -1,7 +1,8 @@
 @font-face {
     font-family: 'PP Mondwest';
     src: url('PPMondwest-Regular.woff2') format('woff2'),
-        url('PPMondwest-Regular.woff') format('woff');
+         url('PPMondwest-Regular.woff') format('otf'),
+         url('PPMondwest-Regular.woff') format('woff');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
