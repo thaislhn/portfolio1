@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", function () {
         popup.style.display = "flex"; // Affiche le pop-up après le délai
     }, Math.floor(Math.random() * (47000 - 34000) + 26000)); // Délai aléatoire entre 10 et 15 sec
 
-    // Fermer le pop-up en cliquant sur le bouton
     document.querySelector(".close-btn").addEventListener("click", function () {
         document.getElementById("popup").style.display = "none";
     });
@@ -12,25 +11,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
 document.addEventListener('DOMContentLoaded', () => {
     
-    // Fermer toutes les fenêtres SAUF search au chargement
+    
     const allWindows = document.querySelectorAll('.section-window, .about-window, .projects-window, .cv-window, .contact-window');
     allWindows.forEach(window => {
         window.style.display = 'none';
     });
 
-    // Masquer toutes les stacks SAUF search au chargement
-    const allStacks = document.querySelectorAll('.about-window-stack, .project-window-stack, .cv-window-stack, .contact-window-stack');
+    const allStacks = document.querySelectorAll('.about-window-stack,.search-window-stack, .project-window-stack, .cv-window-stack, .contact-window-stack');
     allStacks.forEach(stack => {
         stack.style.display = 'none';
     });
 
-    // La fenêtre search reste visible
     document.querySelector('.search-window-stack').style.display = 'block';
     document.querySelectorAll('.search-window').forEach(win => {
         win.style.display = 'block';
     });
 
-    // Rendre les fenêtres draggables
     const windows = document.querySelectorAll('.window, .section-window, .about-window, .projects-window, .cv-window, .contact-window, .search-window');
     windows.forEach(makeWindowDraggable);
 
@@ -173,7 +169,7 @@ const projects = [
         shortDescription: "Court métrage sur la pop culture",
         description: "Pour mon projet de fin de semestre, j'ai exploré l'impact de la pop culture sur différentes personnes à travers une série d'interviews. L'objectif ? Capturer comment les références culturelles - musique, films, séries, jeux vidéo - façonnent nos identités et nos interactions au quotidien. Le projet se compose de deux volets : Un court-métrage documentaire (en cours de finalisation) présentant des témoignages authentiques, monté avec des animations After Effects recréant l'interface d'un iPod. Un site web conçu avec Cargo. Projet à suivre : le montage final sera partagé prochainement !",
         image: "https://i.pinimg.com/736x/f8/c5/5a/f8c55ae0bd8c62dd381306c580ab1fd4.jpg",
-        videoFile: "pop-culture.mp4",
+        videoFile: "pop-culture.mov",
         type: "video"
     },
     {
@@ -181,7 +177,7 @@ const projects = [
         title: "Salle d'Arcade Memphis - Blender",
         shortDescription: "Modélisation 3D d'une salle d'arcade",
         description: "Dans le cadre d'un workshop d'une semaine, nous avons été amenés à créer un objet 3D inspiré du mouvement Memphis, j'ai donc réalisé une salle d'arcade. Une fusion entre le design Memphis (années 80) et l'esthétique rétro des salles d'arcade (années 70-80).",
-        image: "https://i.pinimg.com/736x/c9/fb/f7/c9fbf7ae24aa4d4aacc69b1e7fe9f734.jpg",
+        image: "https://i.pinimg.com/736x/95/26/ab/9526ab794482e94d1ea4adaa0febac98.jpg",
         videoFile: "arcade.mp4",
         type: "video"
     },
@@ -189,7 +185,7 @@ const projects = [
         id: 3,
         title: "Le Fablab des Gobelins",
         shortDescription: "Découvrez le Fablab des Gobelins",
-        description: "J'ai imaginé une manière simple et parlante de présenter notre FabLab à travers ce site : fab-blog.cargo.site. L'idée n'était pas de tout expliquer, mais de montrer concrètement ce qu'on y fait - des impressions 3D qui prennent forme, des découpes laser précises, des circuits électroniques qui s'éveillent. Le parti pris ? Une navigation intuitive où les réalisations parlent d'elles-mêmes. Pas de longs discours, juste l'essentiel : des visuels qui donnent envie de créer, des projets qui inspirent, le tout dans une interface épurée qui laisse la place à l'imagination. Ce projet reflète ma capacité à synthétiser une identité visuelle et à mettre en valeur un espace créatif sans surcharger le message.",
+        description: "J'ai imaginé une manière simple et parlante de présenter notre FabLab à travers ce site : fab-blog.cargo.site. L'idée n'était pas de tout expliquer, mais de montrer concrètement ce qu'on y fait - des impressions 3D aser précises, uitive où les réalisations parlent d'elles-mêmes. Pas de longs discours, juste l'essentiel : des visuels qui donnent envie de créer, des projets qui inspirent, le tout dans une interface épurée qui laisse la place à l'imagination.",
         image: "https://i.pinimg.com/736x/c9/fb/f7/c9fbf7ae24aa4d4aacc69b1e7fe9f734.jpg",
         videoFile: "fablab.mp4",
         type: "video"
@@ -414,3 +410,53 @@ function hideProjectDetail(projectId) {
         document.body.style.overflow = '';
     }
 }
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const video = document.querySelector('.project-detail-video-container video');
+    
+    if(video) {
+        // Force la boucle au cas où l'attribut HTML ne fonctionne pas
+        video.loop = true;
+        
+        // Gestion des erreurs et rechargement silencieux
+        video.addEventListener('error', function() {
+            console.error('Erreur de chargement vidéo');
+        });
+        
+        video.addEventListener('ended', function() {
+            video.currentTime = 0;
+            video.play().catch(e => console.log('Lecture automatique bloquée:', e));
+        }, false);
+        
+        // Lancement manuel si l'autoplay est bloqué
+        const playVideo = () => {
+            video.play().catch(e => {
+                console.log('Tentative de lecture...');
+                // Solution fallback : ajouter un bouton de lecture
+                if(e.name === 'NotAllowedError') {
+                    const playButton = document.createElement('button');
+                    playButton.innerHTML = '▶';
+                    playButton.style.position = 'absolute';
+                    playButton.style.zIndex = '10';
+                    playButton.style.background = 'rgba(0,0,0,0.5)';
+                    playButton.style.border = 'none';
+                    playButton.style.color = 'white';
+                    playButton.style.padding = '10px 15px';
+                    playButton.style.borderRadius = '50%';
+                    playButton.style.cursor = 'pointer';
+                    playButton.addEventListener('click', function() {
+                        video.play();
+                        this.remove();
+                    });
+                    video.parentNode.appendChild(playButton);
+                }
+            });
+        };
+        
+        // Démarrage différé pour certains navigateurs
+        setTimeout(playVideo, 300);
+    }
+});
+
+
