@@ -9,6 +9,9 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+
+
+
 document.addEventListener('DOMContentLoaded', () => {
     
     
@@ -179,7 +182,12 @@ const projects = [
         description: "Dans le cadre d'un workshop d'une semaine, nous avons été amenés à créer un objet 3D inspiré du mouvement Memphis, j'ai donc réalisé une salle d'arcade. Une fusion entre le design Memphis (années 80) et l'esthétique rétro des salles d'arcade (années 70-80).",
         image: "https://i.pinimg.com/736x/95/26/ab/9526ab794482e94d1ea4adaa0febac98.jpg",
         videoFile: "arcade.mp4",
-        type: "video"
+        type: "photo-gallery",
+        photos: [
+            "blender1.jpeg",
+            "blender2.jpeg",
+            "blender3.jpeg",
+        ]
     },
     {
         id: 3,
@@ -187,8 +195,9 @@ const projects = [
         shortDescription: "Découvrez le Fablab des Gobelins",
         description: "J'ai imaginé une manière simple et parlante de présenter notre FabLab à travers ce site : fab-blog.cargo.site. L'idée n'était pas de tout expliquer, mais de montrer concrètement ce qu'on y fait - des impressions 3D aser précises, uitive où les réalisations parlent d'elles-mêmes. Pas de longs discours, juste l'essentiel : des visuels qui donnent envie de créer, des projets qui inspirent, le tout dans une interface épurée qui laisse la place à l'imagination.",
         image: "https://i.pinimg.com/736x/c9/fb/f7/c9fbf7ae24aa4d4aacc69b1e7fe9f734.jpg",
-        videoFile: "fablab1.mp4",
-        type: "video"
+        videoFile: "fablab.mp4",
+        type: "video",
+    
     },
     {
         id: 4,
@@ -220,7 +229,7 @@ const projects = [
         image: "https://i.pinimg.com/736x/44/d7/ef/44d7ef24279af92d74609d6885f6ffee.jpg",
         type: "photo-gallery",
         photos: [
-            "https://i.pinimg.com/736x/71/d0/ba/71d0baded86ebf7a90c6510543db5576.jpg",
+            "https://i.pinimg.com/736x/71/d0/ba/71d0baded86ebf7a90c6510543db5576.jpeg",
             "https://i.pinimg.com/736x/0e/bd/ae/0ebdaefc32d3f5ba3a9c6a6dd8b1fdef.jpg",
             "https://i.pinimg.com/736x/a2/a2/ae/a2a2aef8096dbf2be3e3b1ae33f3ad5d.jpg",
            
@@ -232,10 +241,12 @@ const projects = [
         shortDescription: "Lecteur de musique style Mac",
         description: "Un lecteur de musique interactif inspiré du design Mac, créé en HTML CSS & JS.",
         image: "https://i.pinimg.com/736x/a6/f6/a5/a6f6a56d4ccbda600e2b1b8eb2375b63.jpg",
-        videoFile: "rec top music (1)",
+        videoFile: "rec top music.mov",
         type: "video"
     }
 ];
+
+// ... (le début de votre code reste inchangé jusqu'à la fonction createProjectCards)
 
 function createProjectCards() {
     const projectsGrid = document.getElementById('projects-grid');
@@ -251,11 +262,10 @@ function createProjectCards() {
         card.innerHTML = `
             <div class="project-image">
                 <img src="${project.image}" alt="${project.title}">
-                ${project.type === 'video' ? '' : ''}
             </div>
             <div class="project-info">
                 <div class="project-title">${project.title}</div>
-                <div class="project-description">${project.shortDescription}</div>
+                <div class="project-short-description">${project.shortDescription}</div>
             </div>
         `;
         
@@ -263,6 +273,7 @@ function createProjectCards() {
     });
 }
 
+// ... (le reste de votre code reste inchangé)
 function createProjectDetailPages() {
     const container = document.getElementById('project-details');
     if (!container) return;
@@ -307,6 +318,8 @@ function createProjectDetailPages() {
                     `;
                 }
             }
+
+    
         } else if (project.type === 'photo-gallery' && project.photos) {
             mediaContent = `
                 <div class="photo-gallery-container">
@@ -334,8 +347,140 @@ function createProjectDetailPages() {
                     </div>
                 </div>
             `;
-        }
 
+                    // ▼▼▼ 3. AJOUTE CE NOUVEAU CAS EN DESSOUS ▼▼▼ (projets combinés)
+        } else if ((project.type === 'video-photo-gallery' || project.type === 'photo-video-gallery') 
+            && (project.videoFile || project.youtubeUrl) 
+            && project.photos) {
+      mediaContent = `
+          <div class="combined-media">
+              <!-- Section Vidéo (reprend ton code vidéo existant) -->
+              <div class="video-section">
+                  ${project.videoFile ? `
+                      <video controls autoplay loop muted playsinline>
+                          <source src="${project.videoFile}" type="video/mp4">
+                      </video>
+                  ` : `
+                      <iframe src="https://www.youtube.com/embed/${extractYoutubeId(project.youtubeUrl)}?autoplay=1&mute=1" 
+                              frameborder="0" allowfullscreen>
+                      </iframe>
+                  `}
+              </div>
+
+              <!-- Section Galerie (reprend ton code galerie existant) -->
+              <div class="photo-gallery-container">
+                  ${project.photos.map((photo, index) => `
+                      <img src="${photo}" alt="Photo ${index + 1}">
+                  `).join('')}
+              </div>
+          </div>`;
+  
+        }
+        function createProjectDetailPages() {
+            const container = document.getElementById('project-details');
+            if (!container) return;
+        
+            container.innerHTML = '';
+        
+            projects.forEach(project => {
+                const detailPage = document.createElement('div');
+                detailPage.className = 'project-detail';
+                detailPage.id = `project-${project.id}`;
+        
+                let mediaContent = '';
+                
+                // Gestion des vidéos
+                if (project.type.includes('video')) {
+                    if (project.videoFile) {
+                        mediaContent = `
+                            <div class="project-detail-video">
+                                <div class="project-detail-video-container">
+                                    <video autoplay loop muted playsinline>
+                                        <source src="${project.videoFile}" type="video/mp4">
+                                        Votre navigateur ne supporte pas les vidéos HTML5.
+                                    </video>
+                                </div>
+                            </div>
+                        `;
+                    } else if (project.youtubeUrl) {
+                        const youtubeId = extractYoutubeId(project.youtubeUrl);
+                        if (youtubeId) {
+                            mediaContent = `
+                                <div class="project-detail-video">
+                                    <div class="project-detail-video-container">
+                                        <iframe src="https://www.youtube.com/embed/${youtubeId}?autoplay=1&loop=1&mute=1&playlist=${youtubeId}" 
+                                                frameborder="0" 
+                                                allowfullscreen>
+                                        </iframe>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                    }
+                }
+                
+
+
+                
+                // Gestion des galeries photo
+                if (project.photos && project.photos.length > 0) {
+                    mediaContent += `
+                        <div class="photo-gallery-container">
+                            <div class="gallery-controls">
+                                <button class="gallery-nav prev-btn">‹</button>
+                                <div class="gallery-counter">
+                                    <span class="current-photo">1</span> / ${project.photos.length}
+                                </div>
+                                <button class="gallery-nav next-btn">›</button>
+                            </div>
+                            <div class="photo-grid">
+                                ${project.photos.map((photo, index) => `
+                                    <div class="photo-item ${index === 0 ? 'active' : ''}" data-index="${index}">
+                                        <img src="${photo}" alt="${project.title} - Photo ${index + 1}" loading="lazy">
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <div class="photo-thumbnails">
+                                ${project.photos.map((photo, index) => `
+                                    <div class="thumbnail ${index === 0 ? 'active' : ''}" data-index="${index}">
+                                        <img src="${photo}" alt="Miniature ${index + 1}">
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+        
+                // Gestion de la description avec formatage amélioré
+                let descriptionContent = '';
+                if (project.description) {
+                    // Séparation des paragraphes par les retours à la ligne
+                    const paragraphs = project.description.split('\n').filter(p => p.trim() !== '');
+                    descriptionContent = paragraphs.map(p => `<p class="project-description-paragraph">${p}</p>`).join('');
+                }
+        
+                detailPage.innerHTML = `
+                    <button class="back-button" onclick="hideProjectDetail(${project.id})">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 12H5M12 19l-7-7 7-7"/>
+                        </svg>
+                        Retour
+                    </button>
+                    <div class="project-detail-content">
+                        <h1 class="project-detail-title">${project.title}</h1>
+                        ${mediaContent}
+                        <div class="project-description-container">
+                            ${descriptionContent}
+                        </div>
+                    </div>
+                `;
+        
+                container.appendChild(detailPage);
+            });
+        
+            initPhotoGallery();
+            initVideoPlayers();
+        }
         detailPage.innerHTML = `
             <button class="back-button" onclick="hideProjectDetail(${project.id})">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -505,10 +650,11 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         };
         
+
+        
         // Démarrage différé pour certains navigateurs
         setTimeout(playVideo, 300);
     }
 });
-
 
 
