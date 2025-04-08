@@ -169,7 +169,7 @@ const projects = [
         shortDescription: "Court métrage sur la pop culture",
         description: "Pour mon projet de fin de semestre, j'ai exploré l'impact de la pop culture sur différentes personnes à travers une série d'interviews. L'objectif ? Capturer comment les références culturelles - musique, films, séries, jeux vidéo - façonnent nos identités et nos interactions au quotidien. Le projet se compose de deux volets : Un court-métrage documentaire (en cours de finalisation) présentant des témoignages authentiques, monté avec des animations After Effects recréant l'interface d'un iPod. Un site web conçu avec Cargo. Projet à suivre : le montage final sera partagé prochainement !",
         image: "https://i.pinimg.com/736x/f8/c5/5a/f8c55ae0bd8c62dd381306c580ab1fd4.jpg",
-        videoFile: "pop-culture.mov",
+        youtubeUrl: "https://youtu.be/fqAScQgcX44",
         type: "video"
     },
     {
@@ -275,17 +275,38 @@ function createProjectDetailPages() {
         detailPage.id = `project-${project.id}`;
 
         let mediaContent = '';
-        if (project.type === 'video' && project.videoFile) {
-            mediaContent = `
-                <div class="project-detail-video">
-                    <div class="project-detail-video-container">
-                        <video controls>
-                            <source src="${project.videoFile}" type="video/mp4">
-                            Votre navigateur ne supporte pas les vidéos HTML5.
-                        </video>
+        
+        // Gestion des vidéos (locale ou YouTube)
+        if (project.type === 'video') {
+            if (project.videoFile) {
+                // Vidéo locale
+                mediaContent = `
+                    <div class="project-detail-video">
+                        <div class="project-detail-video-container">
+                            <video autoplay loop muted playsinline>
+                                <source src="${project.videoFile}" type="video/mp4">
+                                Votre navigateur ne supporte pas les vidéos HTML5.
+                            </video>
+                        </div>
                     </div>
-                </div>
-            `;
+                `;
+            } else if (project.youtubeUrl) {
+                // Vidéo YouTube - Conversion de l'URL
+                const youtubeId = extractYoutubeId(project.youtubeUrl);
+                if (youtubeId) {
+                    mediaContent = `
+                        <div class="project-detail-video">
+                            <div class="project-detail-video-container">
+                                <iframe src="https://www.youtube.com/embed/${youtubeId}?autoplay=1&loop=1&mute=1&playlist=${youtubeId}" 
+                                        frameborder="0" 
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                        allowfullscreen>
+                                </iframe>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
         } else if (project.type === 'photo-gallery' && project.photos) {
             mediaContent = `
                 <div class="photo-gallery-container">
@@ -314,60 +335,7 @@ function createProjectDetailPages() {
                 </div>
             `;
         }
-// Ajoutez ce code après avoir créé la galerie
-function initPhotoGallery() {
-    document.querySelectorAll('.photo-gallery-container').forEach(container => {
-        const photos = container.querySelectorAll('.photo-item');
-        const thumbnails = container.querySelectorAll('.thumbnail');
-        const prevBtn = container.querySelector('.prev-btn');
-        const nextBtn = container.querySelector('.next-btn');
-        const counter = container.querySelector('.current-photo');
-        
-        let currentIndex = 0;
-        
-        // Navigation
-        function showPhoto(index) {
-            photos.forEach(photo => photo.classList.remove('active'));
-            thumbnails.forEach(thumb => thumb.classList.remove('active'));
-            
-            currentIndex = (index + photos.length) % photos.length;
-            photos[currentIndex].classList.add('active');
-            thumbnails[currentIndex].classList.add('active');
-            counter.textContent = currentIndex + 1;
-        }
-        
-        // Événements
-        prevBtn.addEventListener('click', () => showPhoto(currentIndex - 1));
-        nextBtn.addEventListener('click', () => showPhoto(currentIndex + 1));
-        
-        thumbnails.forEach(thumb => {
-            thumb.addEventListener('click', () => {
-                showPhoto(parseInt(thumb.dataset.index));
-            });
-        });
-        
-        // Zoom
-        photos.forEach(photo => {
-            photo.addEventListener('click', () => {
-                photo.classList.toggle('fullscreen');
-            });
-        });
-        
-        // Touches clavier
-        document.addEventListener('keydown', (e) => {
-            if (container.querySelector('.fullscreen')) {
-                if (e.key === 'ArrowLeft') showPhoto(currentIndex - 1);
-                if (e.key === 'ArrowRight') showPhoto(currentIndex + 1);
-                if (e.key === 'Escape') {
-                    photos[currentIndex].classList.remove('fullscreen');
-                }
-            }
-        });
-    });
-}
 
-// Appelez cette fonction après avoir chargé la galerie
-initPhotoGallery();
         detailPage.innerHTML = `
             <button class="back-button" onclick="hideProjectDetail(${project.id})">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -384,6 +352,89 @@ initPhotoGallery();
 
         container.appendChild(detailPage);
     });
+
+    // Initialise les galeries photo après leur création
+    initPhotoGallery();
+}
+
+// Fonction pour extraire l'ID YouTube
+function extractYoutubeId(url) {
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : null;
+}
+
+// Fonction d'initialisation de la galerie photo
+function initPhotoGallery() {
+    document.querySelectorAll('.photo-gallery-container').forEach(container => {
+        const photos = container.querySelectorAll('.photo-item');
+        const thumbnails = container.querySelectorAll('.thumbnail');
+        const prevBtn = container.querySelector('.prev-btn');
+        const nextBtn = container.querySelector('.next-btn');
+        const counter = container.querySelector('.current-photo');
+        
+        let currentIndex = 0;
+        
+        function showPhoto(index) {
+            photos.forEach(photo => photo.classList.remove('active'));
+            thumbnails.forEach(thumb => thumb.classList.remove('active'));
+            
+            currentIndex = (index + photos.length) % photos.length;
+            photos[currentIndex].classList.add('active');
+            thumbnails[currentIndex].classList.add('active');
+            counter.textContent = currentIndex + 1;
+        }
+        
+        prevBtn.addEventListener('click', () => showPhoto(currentIndex - 1));
+        nextBtn.addEventListener('click', () => showPhoto(currentIndex + 1));
+        
+        thumbnails.forEach(thumb => {
+            thumb.addEventListener('click', () => {
+                showPhoto(parseInt(thumb.dataset.index));
+            });
+        });
+        
+        photos.forEach(photo => {
+            photo.addEventListener('click', () => {
+                photo.classList.toggle('fullscreen');
+            });
+        });
+        
+        document.addEventListener('keydown', (e) => {
+            if (container.querySelector('.fullscreen')) {
+                if (e.key === 'ArrowLeft') showPhoto(currentIndex - 1);
+                if (e.key === 'ArrowRight') showPhoto(currentIndex + 1);
+                if (e.key === 'Escape') {
+                    photos[currentIndex].classList.remove('fullscreen');
+                }
+            }
+        });
+    });
+}
+
+// Fonctions pour afficher/masquer les détails du projet
+function showProjectDetail(projectId) {
+    const detailPage = document.getElementById(`project-${projectId}`);
+    if (detailPage) {
+        const video = document.getElementById('background-video');
+        if (video) {
+            video.style.opacity = '0';
+            setTimeout(() => {
+                video.style.opacity = '1';
+            }, 10);
+        }
+        
+        detailPage.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function hideProjectDetail(projectId) {
+    const detailPage = document.getElementById(`project-${projectId}`);
+    if (detailPage) {
+        detailPage.classList.remove('active');
+        document.body.style.overflow = '';
+    }
 }
 
 function showProjectDetail(projectId) {
