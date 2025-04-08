@@ -19,7 +19,7 @@
 body {
     font-family: 'PP Mondwest', monospace;
     font-size: 20px;
-    background-color: #d2d2d2;
+    background-color: #ffffff;
     height: 100vh;
     display: flex;
     justify-content: center;
@@ -103,7 +103,6 @@ h1 {
     align-items: center;
     cursor: move;
 }
-
 
 
 
@@ -434,7 +433,7 @@ h1 {
 
 .project-description {
     font-size: 14px;
-    color: #666;
+    color: #ffffff;
     margin-bottom: 15px;
     line-height: 1.4;
 }
@@ -499,6 +498,7 @@ h1 {
     height: 0;
     overflow: hidden;
     border-radius: 8px;
+    margin-bottom: 20px;
 }
 
 .project-detail-video-container iframe {
@@ -508,6 +508,7 @@ h1 {
     width: 100%;
     height: 100%;
     border: none;
+    margin-bottom: 20px;
 }
 
 .section-window .window-content {
@@ -743,11 +744,14 @@ h1 {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease;
     aspect-ratio: 1/1;
+    margin-bottom: 20px;
+
 }
 
 .photo-item.active {
     display: block;
     animation: fadeIn 0.5s ease;
+    margin-bottom: 20px;
 }
 
 .photo-item img {
@@ -756,7 +760,10 @@ h1 {
     object-fit: cover;
     object-position: center;
     cursor: zoom-in;
+    margin-bottom: 20px;
+    
 }
+
 
 
 .photo-item:hover .photo-caption {
@@ -769,7 +776,7 @@ h1 {
     justify-content: center;
     align-items: center;
     gap: 20px;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
 }
 
 .gallery-nav {
@@ -785,6 +792,7 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: center;
+
 }
 
 .gallery-nav:hover {
@@ -808,6 +816,7 @@ h1 {
     padding: 10px 0;
     scrollbar-width: thin;
     scrollbar-color: #ddd transparent;
+    margin-bottom: 28px;
 }
 
 .photo-thumbnails::-webkit-scrollbar {
@@ -879,3 +888,4 @@ h1 {
         height: 45px;
     }
 }
+
