@@ -104,10 +104,6 @@ h1 {
     cursor: move;
 }
 
-.window-title {
-    color: transparent; /* Rend l'intérieur du texte transparent */
-    -webkit-text-stroke: 1px #00100b
-}
 
 
 .window-title {
