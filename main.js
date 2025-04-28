@@ -74,23 +74,45 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Configurer les boutons de fermeture (sauf pour search)
-    const closeButtons = document.querySelectorAll('.close-button');
-    closeButtons.forEach(button => {
-        button.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const window = button.closest('.section-window, .projects-window, .cv-window, .contact-window');
-            if (window) {
-                const stack = window.closest('.about-window-stack, .project-window-stack, .cv-window-stack, .contact-window-stack');
-                if (stack) {
-                    stack.style.display = 'none';
-                    stack.querySelectorAll('div[class*="-window"]').forEach(win => {
-                        win.style.display = 'none';
-                    });
-                }
+  // Configurer les boutons de fermeture (y compris pour search)
+const closeButtons = document.querySelectorAll('.close-button');
+closeButtons.forEach(button => {
+    button.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const windowElement = button.closest('.section-window, .search-window, .projects-window, .cv-window, .contact-window, .search-window-stack, .search-window, #job-popup');
+        if (windowElement) {
+            // Trouver le stack parent - version plus générique
+            let stack = windowElement.closest('[class$="-window-stack"]');
+            if (!stack) {
+                // Alternative si la convention de nommage est différente
+                stack = windowElement.closest('.window-stack');
             }
+            
+            if (stack) {
+                stack.style.display = 'none';
+                // Masquer toutes les fenêtres dans ce stack
+                stack.querySelectorAll('.window, .section-window, .search-window, .projects-window, .cv-window, .contact-window').forEach(win => {
+                    win.style.display = 'none';
+                });
+            } else {
+                // Fallback: masquer simplement la fenêtre parente
+                windowElement.style.display = 'none';
+            }
+        }
+    });
+});
+
+
+// Solution "force brute" qui masquera tout ce qu'il faut
+document.querySelectorAll('.close-button').forEach(button => {
+    button.addEventListener('click', function() {
+        // Masque tous les éléments concernés
+        document.querySelectorAll('.search-window-stack, .search-window, #job-popup').forEach(element => {
+            element.style.display = 'none';
         });
     });
+});
+
 
     // Créer les cartes de projet
     createProjectCards();
@@ -656,5 +678,8 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(playVideo, 300);
     }
 });
+
+
+
 
 
