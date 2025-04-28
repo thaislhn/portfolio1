@@ -189,15 +189,16 @@ const projects = [
             "blender3.jpeg",
         ]
     },
-     {
+    {
         id: 3,
-        title: "Music Player",
-        shortDescription: "Lecteur de musique style Mac",
-        description: "Un lecteur de musique interactif inspiré du design Mac, créé en HTML CSS & JS.",
-        image: "https://i.pinimg.com/736x/a6/f6/a5/a6f6a56d4ccbda600e2b1b8eb2375b63.jpg",
-        videoFile: "rec top music.mov",
-        type: "video"
-    }
+        title: "Le Fablab des Gobelins",
+        shortDescription: "Découvrez le Fablab des Gobelins",
+        description: "J'ai imaginé une manière simple et parlante de présenter notre FabLab à travers ce site : fab-blog.cargo.site. L'idée n'était pas de tout expliquer, mais de montrer concrètement ce qu'on y fait - des impressions 3D aser précises, uitive où les réalisations parlent d'elles-mêmes. Pas de longs discours, juste l'essentiel : des visuels qui donnent envie de créer, des projets qui inspirent, le tout dans une interface épurée qui laisse la place à l'imagination.",
+        image: "https://i.pinimg.com/736x/8d/2c/07/8d2c07207fbcbbecd3345aab8edcea95.jpg",
+        videoFile: "fablab.mp4",
+        type: "video",
+    
+    },
     {
         id: 4,
         title: "Photographie",
@@ -228,7 +229,7 @@ const projects = [
         image: "https://i.pinimg.com/736x/44/d7/ef/44d7ef24279af92d74609d6885f6ffee.jpg",
         type: "photo-gallery",
         photos: [
-            "https://i.pinimg.com/736x/44/d7/ef/44d7ef24279af92d74609d6885f6ffee.jpg",
+            "https://i.pinimg.com/736x/71/d0/ba/71d0baded86ebf7a90c6510543db5576.jpeg",
             "https://i.pinimg.com/736x/0e/bd/ae/0ebdaefc32d3f5ba3a9c6a6dd8b1fdef.jpg",
             "https://i.pinimg.com/736x/a2/a2/ae/a2a2aef8096dbf2be3e3b1ae33f3ad5d.jpg",
            
@@ -236,15 +237,13 @@ const projects = [
     },
     {
         id: 6,
-        title: "Le Fablab des Gobelins",
-        shortDescription: "Découvrez le Fablab des Gobelins",
-        description: "J'ai imaginé une manière simple et parlante de présenter notre FabLab à travers ce site : fab-blog.cargo.site. L'idée n'était pas de tout expliquer, mais de montrer concrètement ce qu'on y fait - des impressions 3D aser précises, uitive où les réalisations parlent d'elles-mêmes. Pas de longs discours, juste l'essentiel : des visuels qui donnent envie de créer, des projets qui inspirent, le tout dans une interface épurée qui laisse la place à l'imagination.",
-        image: "https://i.pinimg.com/736x/8d/2c/07/8d2c07207fbcbbecd3345aab8edcea95.jpg",
-        videoFile: "fablab1.mp4",
-        type: "video",
-    
+        title: "Music Player",
+        shortDescription: "Lecteur de musique style Mac",
+        description: "Un lecteur de musique interactif inspiré du design Mac, créé en HTML CSS & JS.",
+        image: "https://i.pinimg.com/736x/a6/f6/a5/a6f6a56d4ccbda600e2b1b8eb2375b63.jpg",
+        videoFile: "rec top music.mov",
+        type: "video"
     }
-
 ];
 
 // ... (le début de votre code reste inchangé jusqu'à la fonction createProjectCards)
