@@ -251,7 +251,7 @@ const projects = [
         image: "https://i.pinimg.com/736x/44/d7/ef/44d7ef24279af92d74609d6885f6ffee.jpg",
         type: "photo-gallery",
         photos: [
-            "https://i.pinimg.com/736x/71/d0/ba/71d0baded86ebf7a90c6510543db5576.jpeg",
+            "https://i.pinimg.com/736x/71/d0/ba/71d0baded86ebf7a90c6510543db5576.jpg",
             "https://i.pinimg.com/736x/0e/bd/ae/0ebdaefc32d3f5ba3a9c6a6dd8b1fdef.jpg",
             "https://i.pinimg.com/736x/a2/a2/ae/a2a2aef8096dbf2be3e3b1ae33f3ad5d.jpg",
            
