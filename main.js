@@ -217,7 +217,7 @@ const projects = [
         shortDescription: "Découvrez le Fablab des Gobelins",
         description: "J'ai imaginé une manière simple et parlante de présenter notre FabLab à travers ce site : fab-blog.cargo.site. L'idée n'était pas de tout expliquer, mais de montrer concrètement ce qu'on y fait - des impressions 3D aser précises, uitive où les réalisations parlent d'elles-mêmes. Pas de longs discours, juste l'essentiel : des visuels qui donnent envie de créer, des projets qui inspirent, le tout dans une interface épurée qui laisse la place à l'imagination.",
         image: "https://i.pinimg.com/736x/8d/2c/07/8d2c07207fbcbbecd3345aab8edcea95.jpg",
-        youtubeUrl: "https://youtu.be/EhgghqJtQA8",
+        youtubeUrl: "https://www.youtube.com/watch?v=EhgghqJtQA8",
         type: "video"
     
     },
