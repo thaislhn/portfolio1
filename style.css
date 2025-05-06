@@ -889,3 +889,211 @@ h1 {
     }
 }
 
+
+
+.project-detail {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    padding: 20px;
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+.project-detail-video {
+    width: 100%;
+    max-width: 800px;
+    margin: 20px auto;
+}
+
+.photo-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.description {
+    white-space: pre-line; /* Conserve les sauts de ligne */
+    margin-top: 20px;
+}
+
+
+
+
+
+@media (max-width: 900px) {
+    body {
+        font-size: 20px;
+        padding: 0;
+        overflow-x: hidden;
+        height: auto;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #ffffff;
+    }
+    
+    .popup {
+        display: none; /* Caché au début */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.8); /* Fond sombre agressif */
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+        animation: fadeIn 0.5s ease-in-out; /* Animation d'apparition */
+    }
+    .desktop {
+        width: auto;
+        height: auto;
+        padding: 20px;
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    
+
+    /* CENTRE LE PORTFOLIO */
+    .project-window-stack {
+        position: relative;
+        width: 350px;
+        height: 350px;
+        margin: 0 auto;
+        top: 0;
+        left: 0;
+        transform: none !important;
+        padding: 10%
+    }
+
+    .projects-window {
+        font-size: 20px;
+        width: 350px;
+        height: 700px;
+        min-height: 550px;
+    }
+
+     
+    .folder-grid {
+        width: auto;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 4px;
+        padding: 10px;
+        height: 200px;
+    }
+
+
+    .folder {
+        padding: 5px;
+    }
+
+    .folder-icon {
+        width: 50px;
+        height: 40px;
+    }
+
+    .folder span {
+        font-size: 8px;
+    }
+
+    /* PETITES FENETRES STACK SANS ROTATION */
+    .about-window-stack,
+    .cv-window-stack,
+    .contact-window-stack {
+        font-size: 20px;
+        position: absolute;
+        width: 200px;
+        height: auto;
+        margin: 0;
+        transform: none;
+    }
+
+    /* Positionnement précis */
+    .about-window-stack {
+        top: 20px;
+        left: 100px;
+        width: 250px;
+    }
+
+    .cv-window-stack {
+        top: 65%;
+        right: 10px;
+        left: 20px;
+    }
+
+
+    .contact-window-stack {
+        bottom: 20%;
+        right: 0%;
+        left: auto;
+        top: 20%;
+        height: 100px;
+        width: 250px;
+        align-self: flex-end
+    }
+
+    /* Style stack simple */
+    .about-window, 
+    .cv-window,
+    .contact-window {
+        width: auto nt;
+        height: auto !important;
+        transform: none !important;
+        border: 1px solid #000;
+    }
+
+    .about-window:nth-child(1),
+    .cv-window:nth-child(1),
+    .contact-window:nth-child(1) {
+        top: 0;
+        left: 0;
+    }
+
+    .about-window:nth-child(2),
+    .cv-window:nth-child(2),
+    .contact-window:nth-child(2) {
+        top: 8px;
+        left: 8px;
+    }
+
+    .about-window:nth-child(3),
+    .cv-window:nth-child(3),
+    .contact-window:nth-child(3) {
+        top: 16px;
+        left: 16px;
+    }
+
+    /* Fenêtres modales */
+    .window {
+        font-size: 20px;
+        width: 360px !important;
+        height: 250px !important;
+        top: auto !important;
+        left: 50% !important;
+    }
+
+    .window-header {
+        padding: 8px 12px;
+    }
+
+    .window-title {
+        font-size: 25px;
+    }
+
+    .window-content {
+        font-size: 20px;
+        padding: 10px;
+        max-height: 60vh;
+        overflow-y: auto;
+        font-size: 14px;
+    }
+}
+
