@@ -1014,13 +1014,14 @@ h1 {
         transform: none;
     }
 
-    /* Positionnement précis */
     .about-window-stack {
+        position: absolute;
         top: 20px;
-        left: 150px;
-        height: 150px;
+        left: 160px;
         width: 250px;
+        height: 150px;
     }
+    
 
     .cv-window-stack {
         top: 65%;
@@ -1059,7 +1060,7 @@ h1 {
     .about-window:nth-child(2),
     .cv-window:nth-child(2),
     .contact-window:nth-child(2) {
-        top: 5px;
+        top: 8px;
         left: 8px;
     }
 
