@@ -1040,6 +1040,13 @@ h1 {
         height: 100px;
     }
     
+    /* ✅ Correctif spécifique Safari */
+    @supports (-webkit-touch-callout: none) {
+        .contact-window-stack {
+            top: 72%; /* ajuste uniquement dans Safari */
+        }
+    }
+    
     /* Style stack simple */
     .about-window, 
     .cv-window,
