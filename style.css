@@ -653,7 +653,7 @@ h1 {
 .close-btn {
     position: absolute;
     top: 10px; /* Ajusté pour éviter le bord */
-    right: 15px;
+    right: 25px;
     font-size: 20px;
     cursor: pointer;
     color: white !important; /* Force la couleur blanche */
@@ -967,7 +967,6 @@ h1 {
         position: relative;
         width: 350px;
         height: 350px;
-        margin: 0 auto;
         top: 0;
         left: 0;
         transform: none !important;
@@ -1010,8 +1009,7 @@ h1 {
     .contact-window-stack {
         font-size: 20px;
         position: absolute;
-        width: 200px;
-        height: auto;
+        width: 300px;
         margin: 0;
         transform: none;
     }
@@ -1019,7 +1017,8 @@ h1 {
     /* Positionnement précis */
     .about-window-stack {
         top: 20px;
-        left: 100px;
+        left: 150px;
+        height: 150px;
         width: 250px;
     }
 
@@ -1027,13 +1026,16 @@ h1 {
         top: 65%;
         right: 10px;
         left: 20px;
+        width: 230px;
+        height: 110px;
+
     }
 
 
     .contact-window-stack {
         bottom: 20%;
         right: 0%;
-        left: auto;
+        left: 35%;
         top: 20%;
         height: 100px;
         width: 250px;
@@ -1089,11 +1091,10 @@ h1 {
     }
 
     .window-content {
-        font-size: 20px;
         padding: 10px;
         max-height: 60vh;
         overflow-y: auto;
-        font-size: 14px;
+        font-size: 19px;
     }
 }
 
