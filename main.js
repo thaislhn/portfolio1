@@ -17,20 +17,6 @@ function escapeHtml(html) {
       type: "video"
     },
     {
-      id: 2,
-      title: "Salle d'Arcade Memphis - Blender",
-      shortDescription: "Modélisation 3D d'une salle d'arcade",
-      description: "Dans le cadre d'un workshop d'une semaine, nous avons été amenés à créer un objet 3D inspiré du mouvement Memphis, j'ai donc réalisé une salle d'arcade. Une fusion entre le design Memphis (années 80) et l'esthétique rétro des salles d'arcade (années 70-80).",
-      image: "https://i.pinimg.com/736x/95/26/ab/9526ab794482e94d1ea4adaa0febac98.jpg",
-      videoFile: "arcade.mp4",
-      type: "photo-gallery",
-      photos: [
-        "https://i.pinimg.com/736x/95/26/ab/9526ab794482e94d1ea4adaa0febac98.jpg",
-        "https://i.pinimg.com/736x/f8/c5/5a/f8c55ae0bd8c62dd381306c580ab1fd4.jpg",
-        "https://i.pinimg.com/736x/44/d7/ef/44d7ef24279af92d74609d6885f6ffee.jpg",
-      ]
-    },
-    {
       id: 3,
       title: "Le Fablab des Gobelins",
       shortDescription: "Découvrez le Fablab des Gobelins",
