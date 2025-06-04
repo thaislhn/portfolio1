@@ -1103,3 +1103,93 @@ h1 {
     }
 }
 
+
+/* Interactive Projects Styles */
+.interactive-project-container {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 24px;
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .code-tabs {
+    display: flex;
+    background-color: #f5f5f5;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  .tab-button {
+    padding: 12px 20px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: #555;
+    transition: all 0.2s ease;
+  }
+  
+  .tab-button:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+  
+  .tab-button.active {
+    color: #007bff;
+    border-bottom: 2px solid #007bff;
+    background-color: #fff;
+  }
+  
+  .tab-content {
+    display: none;
+    padding: 16px;
+    overflow: auto;
+    max-height: 500px;
+  }
+  
+  .tab-content.active {
+    display: block;
+  }
+  
+  .tab-content pre {
+    margin: 0;
+    padding: 16px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    overflow-x: auto;
+  }
+  
+  .tab-content code {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #333;
+  }
+  
+  .preview-container {
+    width: 100%;
+    min-height: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f8f9fa;
+    overflow: hidden;
+  }
+  
+  /* For code highlighting */
+  .language-html {
+    color: #e34c26;
+  }
+  
+  .language-css {
+    color: #563d7c;
+  }
+  
+  .language-javascript {
+    color: #f1e05a;
+  }
+  
+  /* CD Animation styles are already included in the project object */
