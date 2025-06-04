@@ -1171,11 +1171,10 @@ h1 {
   
   .preview-container {
     width: 100%;
-    min-height: 400px;
+    min-height: 500px;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #f8f9fa;
     overflow: hidden;
   }
   
@@ -1193,3 +1192,4 @@ h1 {
   }
   
   /* CD Animation styles are already included in the project object */
+
