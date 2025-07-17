@@ -10,7 +10,7 @@ const projects = [
     id: 5,
     title: "Pochette CD 3D",
     shortDescription: "Animation 3D interactive",
-    description: "Modélisation 3D d'une pochette de CD avec animation CSS",
+    description: "Modélisation 3D d'une pochette de CD créer via la suite adobe, avec animation CSS/JS",
     image: "https://i.pinimg.com/736x/44/d7/ef/44d7ef24279af92d74609d6885f6ffee.jpg",
     type: "interactive",
     htmlContent: `
