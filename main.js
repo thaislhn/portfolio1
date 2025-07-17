@@ -638,8 +638,8 @@ div#bottom { top: 345px; }
     type: "photo-gallery",
     photos: [
       "https://i.pinimg.com/736x/95/26/ab/9526ab794482e94d1ea4adaa0febac98.jpg",
-      "https://i.pinimg.com/736x/f8/c5/5a/f8c55ae0bd8c62dd381306c580ab1fd4.jpg",
-      "https://i.pinimg.com/736x/44/d7/ef/44d7ef24279af92d74609d6885f6ffee.jpg"
+      "https://i.pinimg.com/736x/e8/ca/b8/e8cab8eec2d584f7dbb7d75785af2189.jpg",
+      "https://i.pinimg.com/736x/17/07/37/170737337e688ac55b45c6bf74ffc2bf.jpg"
     ]
   },
   {
