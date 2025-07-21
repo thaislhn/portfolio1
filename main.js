@@ -1125,6 +1125,12 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 
+  // Mettre la première fenêtre de projets au premier plan
+  const firstProjectWindow = document.querySelector(".project-window-stack .projects-window");
+  if (firstProjectWindow) {
+    firstProjectWindow.style.zIndex = "20";
+  }
+
   const windows = document.querySelectorAll(".window, .section-window, .about-window, .projects-window, .cv-window, .contact-window, .search-window");
   windows.forEach(makeWindowDraggable);
 
