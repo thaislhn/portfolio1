@@ -1078,21 +1078,50 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 
-  const allWindows = document.querySelectorAll(".section-window, .about-window, .projects-window, .cv-window, .contact-window");
-  allWindows.forEach(window => {
-    window.style.display = "none";
-  });
-
+  // MODIFICATION : Au lieu de cacher toutes les fenêtres, on les affiche toutes
   const allStacks = document.querySelectorAll(".about-window-stack, .search-window-stack, .project-window-stack, .cv-window-stack, .contact-window-stack");
   allStacks.forEach(stack => {
-    stack.style.display = "none";
+    stack.style.display = "block";
   });
+
+  // Afficher toutes les fenêtres dans chaque stack
+  const aboutStack = document.querySelector(".about-window-stack");
+  if (aboutStack) {
+    aboutStack.querySelectorAll(".about-window").forEach((win, index) => {
+      win.style.display = "block";
+      win.style.zIndex = 10 + index;
+    });
+  }
+
+  const projectStack = document.querySelector(".project-window-stack");
+  if (projectStack) {
+    projectStack.querySelectorAll(".projects-window").forEach((win, index) => {
+      win.style.display = "block";
+      win.style.zIndex = 10 + index;
+    });
+  }
+
+  const cvStack = document.querySelector(".cv-window-stack");
+  if (cvStack) {
+    cvStack.querySelectorAll(".cv-window").forEach((win, index) => {
+      win.style.display = "block";
+      win.style.zIndex = 10 + index;
+    });
+  }
+
+  const contactStack = document.querySelector(".contact-window-stack");
+  if (contactStack) {
+    contactStack.querySelectorAll(".contact-window").forEach((win, index) => {
+      win.style.display = "block";
+      win.style.zIndex = 10 + index;
+    });
+  }
 
   const searchStack = document.querySelector(".search-window-stack");
   if (searchStack) {
-    searchStack.style.display = "block";
-    document.querySelectorAll(".search-window").forEach(win => {
+    searchStack.querySelectorAll(".search-window").forEach((win, index) => {
       win.style.display = "block";
+      win.style.zIndex = 10 + index;
     });
   }
 
