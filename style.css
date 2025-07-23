@@ -14,7 +14,7 @@
 }
 
 body {
-  font-family: 'PP Mondwest', monospace;
+  font-family: 'PP Mondwest ', monospace;
   font-size: 20px;
   background-color: #ffffff;
   height: 100vh;
@@ -87,8 +87,8 @@ h1 {
 }
 
 .window-header {
-  background: #000000;
-  color: #dbdb00;
+  background: #070507;
+  color: #e5ffa5;
   padding: 8px 15px;
   display: flex;
   justify-content: space-between;
