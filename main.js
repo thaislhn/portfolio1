@@ -10,9 +10,15 @@ const projects = [
     id: 5,
     title: "Pochette CD 3D",
     shortDescription: "Animation 3D interactive",
-    description: "Modélisation 3D d'une pochette de CD créer via la suite adobe, avec animation CSS/JS",
+    description: "Dans le cadre d'un projet à l'école, on devait créer la pochette d'un artiste. J'ai choisi de partir d'une cover réalisée par une amie, puis de la transformer en y ajoutant mes propres éléments. J'ai travaillé en mélangeant mes propres dessins et textures avec des retouches numériques, en passant par Illustrator, InDesign et Photoshop. Je voulais trouver une façon originale de présenter ma cover. Comme je cherchais aussi à ajouter de la 3D à mon portfolio, ce projet a été l'occasion parfaite pour expérimenter la modélisation via le code et donner vie à une version 3D de la pochette.",
     image: "https://i.pinimg.com/736x/44/d7/ef/44d7ef24279af92d74609d6885f6ffee.jpg",
-    type: "interactive",
+    type: "interactive", // nouveau type mixte
+    photos: [
+      "https://i.pinimg.com/736x/71/d0/ba/71d0baded86ebf7a90c6510543db5576.jpg",
+      "https://i.pinimg.com/736x/61/04/ad/6104adf2e7ed6afa9a73f386166368a1.jpg",
+      "https://i.pinimg.com/736x/44/d7/ef/44d7ef24279af92d74609d6885f6ffee.jpg",
+      // ajoutez d'autres images de votre pochette CD ici
+    ],
     htmlContent: `
       <section id="wrap">
         <div id="box">
@@ -25,97 +31,177 @@ const projects = [
           <div id="bottom"></div>
         </div>  
       </section>
+    <div class="simple-gallery">
+    <h3>Autres visuels</h3>
+    <div class="gallery-grid">
+      <img src="https://i.pinimg.com/736x/42/42/9f/42429fdeee88de821ffdb75e2e1daf53.jpg">
+      <img src="https://i.pinimg.com/736x/42/42/9f/42429fdeee88de821ffdb75e2e1daf53.jpg">
+
+      <!-- Ajoutez autant d'images que vous voulez -->
+    </div>
+  </div>
+
+  <style>
+    .simple-gallery {
+      margin-top: 40px;
+      text-align: center;
+    }
+    .gallery-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+    .gallery-grid img {
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 5px;
+    }
+  </style>
+
+      
     `,
     cssContent: `
-:root {
-  --box-color: #222;
+    :root {
+      --box-color: #222;
+    }
+    
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    
+    /* Conteneur principal */
+   .simple-gallery {
+  margin-left: 30%; /* Aligne la galerie à droite */
+  padding-right: 30px; /* Marge intérieure droite */
+}
+    
+    /* Pochette CD réduite (20% plus petite) */
+    #wrap {
+      perspective: 800px;
+      width: 280px;  /* 350px * 0.8 */
+      height: 280px;
+    }
+    
+    #box {
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      animation: spinaround 8s infinite linear;
+    }
+    
+    #box > div {
+      position: absolute;
+      width: 280px;
+      height: 280px;
+      overflow: hidden;
+    }
+    
+    /* Face avant */
+    div#front {
+      background: var(--box-color);
+      background-image: url('https://i.pinimg.com/736x/71/d0/ba/71d0baded86ebf7a90c6510543db5576.jpg');
+      background-size: cover;
+    }
+    
+    /* Face arrière */
+    div#back { 
+      background: var(--box-color);
+      transform: translateZ(-8px) rotateY(180deg); /* 10px * 0.8 */
+      background-image: url('https://i.pinimg.com/736x/61/04/ad/6104adf2e7ed6afa9a73f386166368a1.jpg');
+      background-size: cover;
+    }
+    
+    /* CD */
+    div#cd {
+      transform: translateZ(-4px) translateX(100px); /* 5px * 0.8 et 125px * 0.8 */
+      border-radius: 280px;
+      box-shadow: 0 0 0 4px silver inset,
+                  0 0 0 80px #f6f6f6 inset,
+                  0 0 0 84px silver inset,
+                  0 0 0 112px rgba(255,255,255,0.25) inset;
+      background-image: url('https://i.pinimg.com/736x/44/d7/ef/44d7ef24279af92d74609d6885f6ffee.jpg');
+      background-size: cover;
+    }
+    
+    /* Côtés GAUCHE et DROIT */
+    div#left,
+    div#right { 
+      background: var(--box-color);
+      width: 8px; /* 10px * 0.8 */
+      transform: translateZ(-4px) rotateY(90deg); /* 5px * 0.8 */
+      background-image: url('https://i.pinimg.com/736x/44/d7/ef/44d7ef24279af92d74609d6885f6ffee.jpg');
+      background-size: cover;
+    }
+    
+    div#left { left: -4px; } /* 5px * 0.8 */
+    div#right { left: 272px; } /* 340px * 0.8 */
+    
+    /* Côtés HAUT et BAS */
+    div#top,
+    div#bottom { 
+      background: var(--box-color);
+      height: 8px; /* 10px * 0.8 */
+      transform: translateZ(-4px) rotateX(90deg); /* 5px * 0.8 */
+    }
+    
+    div#top { top: -4px; } /* 5px * 0.8 */
+    div#bottom { top: 272px; } /* 345px * 0.8 */
+    
+    /* Galerie à droite */
+    .gallery-section {
+      flex: 1;
+      min-width: 300px;
+    }
+    
+    .gallery-title {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+    
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 15px;
+    }
+    
+    .gallery-img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 5px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+      transition: transform 0.3s;
+    }
+    
+    .gallery-img:hover {
+      transform: scale(1.05);
+    }
+    
+    @keyframes spinaround {
+      to {
+        transform: rotateY(360deg);
+      }
+    }
+
+    #gallery-img {
+  animation: zoomIn 0.3s ease-out;
 }
 
-body {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-}
-
-#wrap {
-  perspective: 800px;
-  width: 350px; 
-  height: 350px; 
-}
-
-#box {
-  width: 100%; 
-  height: 100%;  
-  transform-style: preserve-3d;
-  animation: spinaround 8s infinite linear;
-}
-
-#box > div {
-  position: absolute;
-  width: 350px;
-  height: 350px;
-  overflow: hidden;
-}
-
-div#front {
-  background: var(--box-color);
-  background-size: 350px 350px;
-  background-image: url('https://i.pinimg.com/736x/71/d0/ba/71d0baded86ebf7a90c6510543db5576.jpg');
-  background-size: cover;
-  background-position: center;
-}
-
-div#back { 
-  background: var(--box-color); 
-  background-size: 350px 350px;
-  transform: translateZ(-10px) rotateY(180deg);
-  background-image: url('https://i.pinimg.com/736x/61/04/ad/6104adf2e7ed6afa9a73f386166368a1.jpg');
-  background-size: cover;
-  background-position: center;
-}
-
-div#cd {
-  transform: translateZ(-5px) translateX(125px);
-  border-radius: 350px;
-  box-shadow: 0 0 0 5px silver inset,
-              0 0 0 100px #f6f6f6 inset,
-              0 0 0 105px silver inset,
-              0 0 0 140px rgba(255,255,255,0.25) inset;
-  background-image: url('https://i.pinimg.com/736x/44/d7/ef/44d7ef24279af92d74609d6885f6ffee.jpg');
-  background-size: cover;
-  background-position: center;
-}
-
-div#left,
-div#right { 
-  background: var(--box-color);
-  width: 10px;
-  transform: translateZ(-5px) rotateY(90deg);
-  background-image: url('https://i.pinimg.com/736x/44/d7/ef/44d7ef24279af92d74609d6885f6ffee.jpg');
-  background-size: cover;
-  background-position: center;
-}
-
-div#left { left: -5px; }
-div#right { left: 340px; }
-
-div#top,
-div#bottom { 
-  background: var(--box-color);
-  height: 10px; 
-  transform: translateZ(-5px) rotateX(90deg);
-}
-
-div#top { top: -5px; }
-div#bottom { top: 345px; }
-
-@keyframes spinaround{
-  to {
-      transform:rotateY(360deg);
-  }
+@keyframes zoomIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }
     `,
+  
+
     jsContent: `
       document.addEventListener('DOMContentLoaded', function() {
         const box = document.querySelector('#box');
@@ -129,7 +215,7 @@ div#bottom { top: 345px; }
     id: 1,
     title: "Court Métrage Pop Culture",
     shortDescription: "Court métrage sur la pop culture",
-    description: "Pour mon projet de fin de semestre, j'ai exploré l'impact de la pop culture sur différentes personnes à travers une série d'interviews. L'objectif ? Capturer comment les références culturelles - musique, films, séries, jeux vidéo - façonnent nos identités et nos interactions au quotidien. Le projet se compose de deux volets : Un court-métrage documentaire (en cours de finalisation) présentant des témoignages authentiques, monté avec des animations After Effects recréant l'interface d'un iPod. Un site web conçu avec Cargo. Projet à suivre : le montage final sera partagé prochainement !",
+    description: "Pour mon projet de fin de semestre, j'ai exploré l'impact de la pop culture sur différentes personnes à travers une série d'interviews. L'objectif était de capturer comment les références culturelles - musique, films, séries, jeux vidéo - façonnent nos identités et nos interactions. Le projet se compose de deux volets : Un court-métrage documentaire (en cours de finalisation) présentant des témoignages authentiques, monté avec des animations After Effects recréant l'interface d'un iPod. Un site web conçu avec Cargo. Projet à suivre : le montage final sera partagé prochainement !",
     image: "https://i.pinimg.com/736x/f8/c5/5a/f8c55ae0bd8c62dd381306c580ab1fd4.jpg",
     youtubeUrl: "https://youtu.be/fqAScQgcX44",
     type: "video"
@@ -138,7 +224,7 @@ div#bottom { top: 345px; }
     id: 3,
     title: "Lecteur Musical",
     shortDescription: "Lecteur musical interactif",
-    description: "Création d'un lecteur web de musique interactif créer avec du HTML/CSS/JS ",
+    description: "Pour ce projet, j'ai conçu un lecteur de musique accessible, avec une interface inspirée des fenêtres d'ordinateur. J'ai développé ce lecteur en HTML, CSS et JavaScript, ce qui m'a permis d'explorer l'interactivité, cela ma permis d'améliorer mes  en  front-end.",
     image: "https://i.pinimg.com/736x/a6/f6/a5/a6f6a56d4ccbda600e2b1b8eb2375b63.jpg",
     type: "interactive",
     htmlContent: `
@@ -199,7 +285,7 @@ div#bottom { top: 345px; }
     box-sizing: border-box;
 }
 
-.desktop {
+.desktop1 {
     width: 600vh;
     height: 50vh;
     position: relative;
@@ -585,47 +671,7 @@ div#bottom { top: 345px; }
             }
         }
 
-        // Window controls
-        const closeButton = document.querySelector('.close');
-        const minimizeButton = document.querySelector('.minimize');
-        const zoomButton = document.querySelector('.zoom');
-
-        if (closeButton) {
-            closeButton.addEventListener('click', () => {
-                if (playerWindow) {
-                    playerWindow.style.display = 'none';
-                }
-            });
-        }
-
-        let isMinimized = false;
-        if (minimizeButton) {
-            minimizeButton.addEventListener('click', () => {
-                isMinimized = !isMinimized;
-                if (playerWindow) {
-                    playerWindow.style.transform = isMinimized ? 'scale(0.5)' : 'scale(1)';
-                }
-            });
-        }
-
-        let isZoomed = false;
-        if (zoomButton) {
-            zoomButton.addEventListener('click', () => {
-                isZoomed = !isZoomed;
-                if (playerWindow) {
-                    if (isZoomed) {
-                        playerWindow.style.transform = 'scale(1.5)';
-                        playerWindow.style.transition = 'transform 0.3s';
-                    } else {
-                        playerWindow.style.transform = 'scale(1)';
-                    }
-                }
-            });
-        }
-      }
       
-      // Démarrer l'initialisation du lecteur
-      initMusicPlayer();
     `
   },
   {
@@ -634,19 +680,14 @@ div#bottom { top: 345px; }
     shortDescription: "Modélisation 3D d'une salle d'arcade",
     description: "Dans le cadre d'un workshop d'une semaine, nous avons été amenés à créer un objet 3D inspiré du mouvement Memphis, j'ai donc réalisé une salle d'arcade. Une fusion entre le design Memphis (années 80) et l'esthétique rétro des salles d'arcade (années 70-80).",
     image: "https://i.pinimg.com/736x/95/26/ab/9526ab794482e94d1ea4adaa0febac98.jpg",
-    videoFile: "arcade.mp4",
-    type: "photo-gallery",
-    photos: [
-      "https://i.pinimg.com/736x/95/26/ab/9526ab794482e94d1ea4adaa0febac98.jpg",
-      "https://i.pinimg.com/736x/e8/ca/b8/e8cab8eec2d584f7dbb7d75785af2189.jpg",
-      "https://i.pinimg.com/736x/17/07/37/170737337e688ac55b45c6bf74ffc2bf.jpg"
-    ]
+    videoFile: "./arcade.mp4",
+    type: "video"
   },
   {
     id: 6,
     title: "Le Fablab des Gobelins",
     shortDescription: "Découvrez le Fablab des Gobelins",
-    description: "J'ai imaginé une manière simple et parlante de présenter notre FabLab à travers ce site : fab-blog.cargo.site. L'idée n'était pas de tout expliquer, mais de montrer concrètement ce qu'on y fait - des impressions 3D laser précises, intuitive où les réalisations parlent d'elles-mêmes. Pas de longs discours, juste l'essentiel : des visuels qui donnent envie de créer, des projets qui inspirent, le tout dans une interface épurée qui laisse la place à l'imagination.",
+    description: "J'ai imaginé une manière simple  de présenter notre FabLab à travers ce site : fab-blog.cargo.site. L'idée n'était pas de tout expliquer, mais de montrer concrètement ce qu'on y fait où les réalisations parlent d'elles-mêmes.",
     image: "https://i.pinimg.com/736x/8d/2c/07/8d2c07207fbcbbecd3345aab8edcea95.jpg",
     youtubeUrl: "https://youtu.be/EhgghqJtQA8",
     type: "video"
@@ -655,7 +696,7 @@ div#bottom { top: 345px; }
     id: 4,
     title: "Photographie",
     shortDescription: "Découvrez mes photos",
-    description: "Je suis passionné par la photographie. À travers cet art, je trouve un moyen unique de m'exprimer et de partager ma vision du monde ainsi que ma sensibilité. Elle nourrit ma créativité, stimule mon imagination et me pousse à explorer de nouveaux horizons. Une invitation à la découverte et à l'exploration de moi-même ainsi que du monde qui m'entoure. Le cinéma a un impact profond sur moi et mon univers visuel car il me transporte dans des mondes imaginaires et me fait ressentir une émotion qui nourrit ma créativité. Les visuels et scènes esthétiques m'inspirent et influencent ma perception du monde et ma vision artistique.",
+    description: "La photographie est une de mes passions. C'est un moyen de m'exprimer et de partager ma vision du monde. Elle nourrit ma créativité, stimule mon imagination et m'encourage à explorer de nouveaux horizons.",
     image: "https://i.pinimg.com/564x/79/4b/0f/794b0fff82b5959d1cdc64c29fd88b57.jpg",
     type: "photo-gallery",
     photos: [
@@ -672,8 +713,19 @@ div#bottom { top: 345px; }
       "https://i.pinimg.com/736x/37/a8/ba/37a8ba1aceed2f170305d2ced22da4f8.jpg",
       "https://i.pinimg.com/736x/53/b9/a6/53b9a67e07bda74411dff4cc28e3a1eb.jpg"
     ]
-  }
+  },
+  {
+    id: 7,
+    title: "Bannière Animée LinkedIn",
+    shortDescription: "Animation de logo After Effects",
+    description: "Pour ce projet je souhaitais mettre mon logo en avant, alros j'ai décidé ded créér une bannière LinkedIn qui pourrait le mettre en valeur. J'ai créer cette bannière  animée via After Effects",
+    image: "https://i.pinimg.com/736x/17/24/9c/17249cdf1c52f717f2e8a4ce0302d575.jpg",
+    type: "video",
+    youtubeUrl: "https://youtu.be/GEJAIFJmWhQ", // chemin vers ta vidéo
+  }  
 ];
+
+
 
 // Make Windows Draggable
 function makeWindowDraggable(window) {
@@ -808,14 +860,18 @@ function createProjectDetailPages() {
           document.body.appendChild(script);
         }
       }, 0);
+
+
+
+      
     }
-    
     else if (project.type === "video") {
       if (project.videoFile) {
+        // Cas d'un fichier vidéo local
         mediaContent = `
           <div class="project-detail-video">
-            <div class="project-detail-video-container">
-              <video controls>
+            <div class="project-detail-video-container ${project.bannerDimensions ? 'banner-size' : ''}">
+              <video controls autoplay muted loop>
                 <source src="${project.videoFile}" type="video/mp4">
                 Votre navigateur ne supporte pas les vidéos HTML5.
               </video>
@@ -827,7 +883,7 @@ function createProjectDetailPages() {
         if (youtubeId) {
           mediaContent = `
             <div class="project-detail-video">
-              <div class="project-detail-video-container">
+              <div class="project-detail-video-container ${project.bannerDimensions ? 'banner-size' : ''}">
                 <iframe 
                   src="https://www.youtube.com/embed/${youtubeId}" 
                   frameborder="0" 
@@ -838,8 +894,28 @@ function createProjectDetailPages() {
             </div>
           `;
         }
+      
+    }
+ 
+    
+    setTimeout(() => {
+      const container = document.getElementById(previewId);
+  
+      if (container) {
+        container.innerHTML = project.htmlContent;
+  
+        const style = document.createElement("style");
+        style.textContent = project.cssContent;
+        document.head.appendChild(style);
+  
+        const script = document.createElement("script");
+        script.textContent = project.jsContent;
+        document.body.appendChild(script);
       }
-    } 
+      
+      initPhotoGallery(detailPage);
+    }, 0);
+  }
     else if (project.type === "photo-gallery" && project.photos && project.photos.length > 0) {
       mediaContent = `
         <div class="photo-gallery-container">
@@ -986,49 +1062,8 @@ function initPhotoGallery() {
   });
 }
 
-// Initialize Video Players
-function initVideoPlayers() {
-  document.querySelectorAll(".project-detail-video-container video").forEach(video => {
-    video.loop = true;
-    
-    video.addEventListener("error", function() {
-      console.error("Video loading error");
-    });
-    
-    video.addEventListener("ended", function() {
-      video.currentTime = 0;
-      video.play().catch(e => console.log("Autoplay blocked:", e));
-    }, false);
-    
-    const playVideo = () => {
-      video.play().catch(e => {
-        console.log("Trying to play...");
-        if(e.name === "NotAllowedError") {
-          const playButton = document.createElement("button");
-          playButton.innerHTML = "▶";
-          playButton.style.position = "absolute";
-          playButton.style.zIndex = "10";
-          playButton.style.background = "rgba(0,0,0,0.5)";
-          playButton.style.border = "none";
-          playButton.style.color = "white";
-          playButton.style.padding = "10px 15px";
-          playButton.style.borderRadius = "50%";
-          playButton.style.cursor = "pointer";
-          playButton.style.top = "50%";
-          playButton.style.left = "50%";
-          playButton.style.transform = "translate(-50%, -50%)";
-          playButton.addEventListener("click", function() {
-            video.play();
-            this.remove();
-          });
-          video.parentNode.appendChild(playButton);
-        }
-      });
-    };
-    
-    setTimeout(playVideo, 300);
-  });
-}
+
+
 
 // Show Project Detail
 function showProjectDetail(projectId) {
@@ -1043,6 +1078,13 @@ function showProjectDetail(projectId) {
       script.textContent = project.jsContent;
       detailPage.appendChild(script);
     }
+    
+    // Réinitialiser les lecteurs vidéo pour ce projet spécifique
+    if (project && project.type === "video") {
+      setTimeout(() => {
+        initVideoPlayers();
+      }, 100);
+    }
   }
 }
 
@@ -1052,6 +1094,13 @@ function hideProjectDetail(projectId) {
   if (detailPage) {
     detailPage.classList.remove("active");
     document.body.style.overflow = "";
+    
+    // Arrêter toutes les vidéos dans ce projet
+    const videos = detailPage.querySelectorAll("video");
+    videos.forEach(video => {
+      video.pause();
+      video.currentTime = 0;
+    });
   }
 }
 
@@ -1233,3 +1282,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   });
 });
+
+
+
+
