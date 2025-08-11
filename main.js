@@ -10,7 +10,7 @@ const projects = [
     id: 5,
     title: "Pochette CD 3D",
     shortDescription: "Animation 3D interactive",
-    description: "Dans le cadre d'un projet à l'école, on devait créer la pochette d'un artiste. J'ai choisi de partir d'une cover réalisée par une amie, puis de la transformer en y ajoutant mes propres éléments. J'ai travaillé en mélangeant mes propres dessins et textures avec des retouches numériques, en passant par Illustrator, InDesign et Photoshop. Je voulais trouver une façon originale de présenter ma cover. Comme je cherchais aussi à ajouter de la 3D à mon portfolio, ce projet a été l'occasion parfaite pour expérimenter la modélisation via le code et donner vie à une version 3D de la pochette.",
+    description: "Dans le cadre d'un projet à l'école, on devait créer la pochette d'un artiste. J'ai choisi la cover réalisée par une artiste, puis de la transformer en y ajoutant mes propres éléments. J'ai travaillé en mélangeant mes propres dessins et textures avec des retouches, en passant par Illustrator, InDesign et Photoshop. Je voulais trouver une façon originale de présenter ma cover. Comme je cherchais aussi à ajouter de la 3D à mon portfolio, ce projet a été l'occasion parfaite pour expérimenter la modélisation via le code et montrer une autre une version de la pochette.",
     image: "https://i.pinimg.com/736x/44/d7/ef/44d7ef24279af92d74609d6885f6ffee.jpg",
     type: "interactive", // nouveau type mixte
     photos: [
@@ -87,7 +87,10 @@ const projects = [
       perspective: 800px;
       width: 280px;  /* 350px * 0.8 */
       height: 280px;
+      margin-right: 100px; /* Décalage à droite */
     }
+    
+
     
     #box {
       width: 100%;
@@ -719,9 +722,9 @@ const projects = [
     title: "Bannière Animée LinkedIn",
     shortDescription: "Animation de logo After Effects",
     description: "Pour ce projet je souhaitais mettre mon logo en avant, alros j'ai décidé ded créér une bannière LinkedIn qui pourrait le mettre en valeur. J'ai créer cette bannière  animée via After Effects",
-    image: "https://i.pinimg.com/736x/17/24/9c/17249cdf1c52f717f2e8a4ce0302d575.jpg",
+    image: "minia linkedin.png",
+    videoFile: "linkedin-banner.mp4",
     type: "video",
-    youtubeUrl: "https://youtu.be/GEJAIFJmWhQ", // chemin vers ta vidéo
   }  
 ];
 
