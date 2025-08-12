@@ -12,14 +12,542 @@ const projects = [
     shortDescription: "Animation 3D interactive",
     description: "Dans le cadre d'un projet à l'école, on devait créer la pochette d'un artiste. J'ai choisi la cover réalisée par une artiste, puis de la transformer en y ajoutant mes propres éléments. J'ai travaillé en mélangeant mes propres dessins et textures avec des retouches, en passant par Illustrator, InDesign et Photoshop. Je voulais trouver une façon originale de présenter ma cover. Comme je cherchais aussi à ajouter de la 3D à mon portfolio, ce projet a été l'occasion parfaite pour expérimenter la modélisation via le code et montrer une autre une version de la pochette.",
     image: "https://i.pinimg.com/736x/44/d7/ef/44d7ef24279af92d74609d6885f6ffee.jpg",
-    type: "photo-gallery", // nouveau type mixte
+    type: "interactive",
     photos: [
       "mockup pochette1.jpg",
       "mock.png",
       "mock up cd.jpg",
       // ajoutez d'autres images de votre pochette CD ici
     ],
-   
+    htmlContent: `
+      <div class="interactive-project-layout">
+        <div class="cd-container">
+          <section id="wrap">
+            <div id="box">
+              <div id="front"></div>
+              <div id="cd"></div>
+              <div id="back"></div>
+              <div id="left"></div>
+              <div id="right"></div>
+              <div id="top"></div>
+              <div id="bottom"></div>
+            </div>  
+          </section>
+        </div>
+        
+        <div class="project-gallery">
+          <h3>Galerie du projet</h3>
+          <div class="gallery-preview">
+            <img id="main-gallery-img" src="https://i.pinimg.com/736x/71/d0/ba/71d0baded86ebf7a90c6510543db5576.jpg" alt="Image principale">
+          </div>
+          <div class="gallery-thumbnails-horizontal">
+            <div class="thumbnail-container">
+              <img class="gallery-thumb active" src="mockup pochette1.jpg" data-index="0">
+              <img class="gallery-thumb" src="mock.png" data-index="1">
+              <img class="gallery-thumb" src="mock up cd.jpg" data-index="2">
+             
+            </div>
+            <div class="gallery-controls">
+              <button class="gallery-btn prev-gallery" aria-label="Précédent">‹</button>
+              <span class="gallery-counter"><span class="current">1</span>/<span class="total">5</span></span>
+              <button class="gallery-btn next-gallery" aria-label="Suivant">›</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `,
+    cssContent: `
+    .interactive-project-layout {
+      display: flex;
+      gap: 40px;
+      align-items: flex-start;
+      padding: 20px;
+      min-height: 500px;
+    }
+    
+    .cd-container {
+      flex: 1;
+      max-width: 400px;
+    }
+    
+    .project-gallery {
+      flex: 1;
+      max-width: 400px;
+    }
+    
+    .project-gallery h3 {
+      margin-bottom: 20px;
+      color: #333;
+      text-align: center;
+      font-size: 1.2em;
+    }
+    
+    .gallery-preview {
+      margin-bottom: 15px;
+      position: relative;
+      overflow: hidden;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    #main-gallery-img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+      cursor: pointer;
+    }
+    
+    #main-gallery-img:hover {
+      transform: scale(1.05);
+    }
+    
+    .gallery-thumbnails-horizontal {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 8px;
+    }
+    
+    .thumbnail-container {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+      overflow-x: auto;
+      padding-bottom: 5px;
+    }
+    
+    .gallery-thumb {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+      flex-shrink: 0;
+    }
+    
+    .gallery-thumb:hover {
+      transform: scale(1.1);
+      border-color: #007bff;
+    }
+    
+    .gallery-thumb.active {
+      border-color: #007bff;
+      box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.3);
+    }
+    
+    .gallery-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .gallery-btn {
+      background: #007bff;
+      color: white;
+      border: none;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 18px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .gallery-btn:hover {
+      background: #0056b3;
+      transform: scale(1.1);
+    }
+    
+    .gallery-counter {
+      font-weight: 500;
+      color: #666;
+    }
+    
+    /* CD 3D Styles */
+    :root {
+      --box-color: #222;
+    }
+    
+    #wrap {
+      perspective: 800px;
+      width: 280px;
+      height: 280px;
+      margin: 0 auto;
+    }
+    
+    #box {
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      animation: spinaround 8s infinite linear;
+    }
+    
+    #box > div {
+      position: absolute;
+      width: 280px;
+      height: 280px;
+      overflow: hidden;
+    }
+    
+    div#front {
+      background: var(--box-color);
+      background-image: url('https://i.pinimg.com/736x/71/d0/ba/71d0baded86ebf7a90c6510543db5576.jpg');
+      background-size: cover;
+    }
+    
+    div#back { 
+      background: var(--box-color);
+      transform: translateZ(-8px) rotateY(180deg);
+      background-image: url('https://i.pinimg.com/736x/61/04/ad/6104adf2e7ed6afa9a73f386166368a1.jpg');
+      background-size: cover;
+    }
+    
+    div#cd {
+      transform: translateZ(-4px) translateX(100px);
+      border-radius: 280px;
+      box-shadow: 0 0 0 4px silver inset,
+                  0 0 0 80px #f6f6f6 inset,
+                  0 0 0 84px silver inset,
+                  0 0 0 112px rgba(255,255,255,0.25) inset;
+      background-image: url('https://i.pinimg.com/736x/44/d7/ef/44d7ef24279af92d74609d6885f6ffee.jpg');
+      background-size: cover;
+    }
+    
+    div#left, div#right { 
+      background: var(--box-color);
+      width: 8px;
+      transform: translateZ(-4px) rotateY(90deg);
+      background-image: url('https://i.pinimg.com/736x/44/d7/ef/44d7ef24279af92d74609d6885f6ffee.jpg');
+      background-size: cover;
+    }
+    
+    div#left { left: -4px; }
+    div#right { left: 272px; }
+    
+    div#top, div#bottom { 
+      background: var(--box-color);
+      height: 8px;
+      transform: translateZ(-4px) rotateX(90deg);
+    }
+    
+    div#top { top: -4px; }
+    div#bottom { top: 272px; }
+    
+    @keyframes spinaround {
+      to { transform: rotateY(360deg); }
+    }
+    
+   /* Remplacez votre media query existant par ceci */
+@media (max-width: 992px) {
+  .interactive-project-layout {
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    padding: 15px;
+  }
+  
+  .cd-container, .project-gallery {
+    max-width: 100%;
+    width: 100%;
+  }
+  
+  #wrap {
+    width: 280px;
+    height: 280px;
+    margin-bottom: 30px;
+  }
+  
+  .gallery-preview {
+    margin: 0 auto;
+    max-width: 500px;
+  }
+  
+  .thumbnail-container {
+    justify-content: center;
+
+  
+    
+  }
+}
+ @media (max-width: 576px) {
+  /* Version mobile de la pochette 3D */
+  #box {
+    animation: none;
+    transform: rotateY(30deg); /* Montre mieux les côtés */
+  }
+
+  /* Réduire légèrement la taille */
+  #wrap {
+    width: 220px;
+    height: 220px;
+  }
+  
+  #box > div {
+    width: 220px;
+    height: 220px;
+  }
+
+  /* Ajuster les côtés pour la nouvelle taille */
+  div#left, div#right {
+    width: 6px; /* Légèrement plus large pour être visible */
+    background: var(--box-color);
+    display: block !important; /* Force l'affichage */
+  }
+  
+  div#left { left: -3px; }
+  div#right { left: 217px; } /* 220px - 3px */
+
+  /* Ajustement du CD */
+  div#cd {
+    transform: translateZ(-3px) translateX(70px);
+    box-shadow: 0 0 0 3px silver inset,
+                0 0 0 60px #f6f6f6 inset,
+                0 0 0 63px silver inset,
+                0 0 0 85px rgba(255,255,255,0.25) inset;
+  }
+
+  /* Masquer uniquement les parties non essentielles */
+  div#top, div#bottom {
+    display: none;
+  }
+
+  /* Ombre portée pour meilleur rendu */
+  #wrap {
+    filter: drop-shadow(3px 3px 6px rgba(0,0,0,0.3));
+  }
+}
+
+
+    `,
+    jsContent: `
+      document.addEventListener('DOMContentLoaded', function() {
+        initInteractiveGallery();
+        init3DCD();
+      });
+      
+      function initInteractiveGallery() {
+        const mainImg = document.getElementById('main-gallery-img');
+        const thumbnails = document.querySelectorAll('.gallery-thumb');
+        const prevBtn = document.querySelector('.prev-gallery');
+        const nextBtn = document.querySelector('.next-gallery');
+        const currentCounter = document.querySelector('.gallery-counter .current');
+        
+        if (!mainImg || !thumbnails.length) return;
+        
+        const images = [
+          'https://i.pinimg.com/736x/71/d0/ba/71d0baded86ebf7a90c6510543db5576.jpg',
+          'https://i.pinimg.com/736x/61/04/ad/6104adf2e7ed6afa9a73f386166368a1.jpg',
+          'https://i.pinimg.com/736x/44/d7/ef/44d7ef24279af92d74609d6885f6ffee.jpg',
+          'https://i.pinimg.com/736x/42/42/9f/42429fdeee88de821ffdb75e2e1daf53.jpg',
+          'https://i.pinimg.com/736x/95/26/ab/9526ab794482e94d1ea4adaa0febac98.jpg'
+        ];
+        
+        let currentIndex = 0;
+        
+        function updateGallery(index) {
+          if (index < 0 || index >= images.length) return;
+          
+          currentIndex = index;
+          
+          // Fade animation
+          mainImg.style.opacity = '0';
+          setTimeout(() => {
+            mainImg.src = images[currentIndex];
+            mainImg.style.opacity = '1';
+          }, 150);
+          
+          // Update thumbnails
+          thumbnails.forEach((thumb, i) => {
+            thumb.classList.toggle('active', i === currentIndex);
+          });
+          
+          // Update counter
+          if (currentCounter) {
+            currentCounter.textContent = currentIndex + 1;
+          }
+        }
+        
+        // Thumbnail clicks
+        thumbnails.forEach((thumb, index) => {
+          thumb.addEventListener('click', () => updateGallery(index));
+        });
+        
+        // Navigation buttons
+        if (prevBtn) {
+          prevBtn.addEventListener('click', () => {
+            const newIndex = currentIndex > 0 ? currentIndex - 1 : images.length - 1;
+            updateGallery(newIndex);
+          });
+        }
+        
+        if (nextBtn) {
+          nextBtn.addEventListener('click', () => {
+            const newIndex = currentIndex < images.length - 1 ? currentIndex + 1 : 0;
+            updateGallery(newIndex);
+          });
+        }
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'ArrowLeft') {
+            const newIndex = currentIndex > 0 ? currentIndex - 1 : images.length - 1;
+            updateGallery(newIndex);
+          } else if (e.key === 'ArrowRight') {
+            const newIndex = currentIndex < images.length - 1 ? currentIndex + 1 : 0;
+            updateGallery(newIndex);
+          }
+        });
+        
+        // Fullscreen on main image click
+        mainImg.addEventListener('click', () => {
+          openImageModal(images[currentIndex]);
+        });
+        
+        // Auto-play gallery (optionnel)
+        let autoPlayInterval;
+        function startAutoPlay() {
+          autoPlayInterval = setInterval(() => {
+            const newIndex = currentIndex < images.length - 1 ? currentIndex + 1 : 0;
+            updateGallery(newIndex);
+          }, 3000);
+        }
+        
+        function stopAutoPlay() {
+          if (autoPlayInterval) {
+            clearInterval(autoPlayInterval);
+            autoPlayInterval = null;
+          }
+        }
+        
+        // Start autoplay and pause on hover
+        const galleryContainer = document.querySelector('.project-gallery');
+        if (galleryContainer) {
+          startAutoPlay();
+          galleryContainer.addEventListener('mouseenter', stopAutoPlay);
+          galleryContainer.addEventListener('mouseleave', startAutoPlay);
+        }
+      }
+      
+      function init3DCD() {
+        const box = document.querySelector('#box');
+        if (box) {
+          box.style.transformOrigin = 'center center';
+          
+          // Pause animation on hover
+          box.addEventListener('mouseenter', () => {
+            box.style.animationPlayState = 'paused';
+          });
+          
+          box.addEventListener('mouseleave', () => {
+            box.style.animationPlayState = 'running';
+          });
+        }
+      }
+      
+      function openImageModal(imageSrc) {
+        const modal = document.createElement('div');
+        modal.className = 'image-modal';
+        modal.innerHTML = \`
+          <div class="modal-overlay">
+            <div class="modal-content">
+              <img src="\${imageSrc}" alt="Image agrandie">
+              <button class="modal-close" aria-label="Fermer">&times;</button>
+            </div>
+          </div>
+        \`;
+        
+        // Styles pour la modal
+        const style = document.createElement('style');
+        style.textContent = \`
+          .image-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            animation: modalFadeIn 0.3s ease;
+          }
+          
+          @keyframes modalFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+          }
+          
+          .modal-content {
+            position: relative;
+            max-width: 90vw;
+            max-height: 90vh;
+          }
+          
+          .modal-content img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 8px;
+          }
+          
+          .modal-close {
+            position: absolute;
+            top: -40px;
+            right: -40px;
+            background: white;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+          }
+          
+          .modal-close:hover {
+            background: #f0f0f0;
+            transform: scale(1.1);
+          }
+        \`;
+        
+        document.head.appendChild(style);
+        document.body.appendChild(modal);
+        
+        // Close modal events
+        const closeBtn = modal.querySelector('.modal-close');
+        const overlay = modal.querySelector('.modal-overlay');
+        
+        closeBtn.addEventListener('click', () => {
+          modal.remove();
+          style.remove();
+        });
+        
+        overlay.addEventListener('click', (e) => {
+          if (e.target === overlay) {
+            modal.remove();
+            style.remove();
+          }
+        });
+        
+        // Escape key to close
+        document.addEventListener('keydown', function handleEscape(e) {
+          if (e.key === 'Escape') {
+            modal.remove();
+            style.remove();
+            document.removeEventListener('keydown', handleEscape);
+          }
+        });
+      }
+    `
   },
   {
     id: 1,
@@ -34,11 +562,10 @@ const projects = [
     id: 3,
     title: "Lecteur Musical",
     shortDescription: "Lecteur musical interactif",
-    description: "Pour ce projet, j'ai conçu un lecteur de musique accessible, avec une interface inspirée des fenêtres d'ordinateur. J'ai développé ce lecteur en HTML, CSS et JavaScript, ce qui m'a permis d'explorer l'interactivité, cela ma permis d'améliorer mes  en  front-end.",
+    description: "Pour ce projet, j'ai conçu un lecteur de musique accessible, avec une interface inspirée des fenêtres d'ordinateur. J'ai développé ce lecteur en HTML, CSS et JavaScript, ce qui m'a permis d'explorer l'interactivité, cela ma permis d'améliorer mes compétences en front-end.",
     image: "https://i.pinimg.com/736x/a6/f6/a5/a6f6a56d4ccbda600e2b1b8eb2375b63.jpg",
-    videoFile: "top music.mov",
-    type: "video"
- 
+    type: "interactive",
+   
   },
   {
     id: 2,
@@ -53,7 +580,7 @@ const projects = [
     id: 6,
     title: "Le Fablab des Gobelins",
     shortDescription: "Découvrez le Fablab des Gobelins",
-    description: "J'ai imaginé une manière simple  de présenter notre FabLab à travers ce site : fab-blog.cargo.site. L'idée n'était pas de tout expliquer, mais de montrer concrètement ce qu'on y fait où les réalisations parlent d'elles-mêmes.",
+    description: "J'ai imaginé une manière simple de présenter notre FabLab à travers ce site : fab-blog.cargo.site. L'idée n'était pas de tout expliquer, mais de montrer concrètement ce qu'on y fait où les réalisations parlent d'elles-mêmes.",
     image: "https://i.pinimg.com/736x/8d/2c/07/8d2c07207fbcbbecd3345aab8edcea95.jpg",
     youtubeUrl: "https://youtu.be/EhgghqJtQA8",
     type: "video"
@@ -71,7 +598,7 @@ const projects = [
       "https://i.pinimg.com/736x/38/9e/ee/389eee4f1d0006132a69325dc767a5bc.jpg",
       "https://i.pinimg.com/736x/eb/c7/54/ebc75472fd5db45d314b9b7930b8c9a7.jpg",
       "https://i.pinimg.com/736x/ef/db/b0/efdbb0a9663caf99bd4dbab607ddb76a.jpg",
-      "https://i.pinimg.com/736x/4a/30/d3/4a30d33d0a5dbb596748268aac89b9c1.jpg",
+      "https://i.pinimg.com/736x/4a/30/d3/4a30d33d0a5dbb596748268aac89c9c1.jpg",
       "https://i.pinimg.com/474x/39/06/b2/3906b24eb56c586598f8525a9e9d59f2.jpg",
       "https://i.pinimg.com/736x/46/80/a3/4680a34b53f0826916f6f64810567979.jpg",
       "https://i.pinimg.com/736x/2f/c8/db/2fc8dbfbc502ae04291b59d613898c20.jpg",
@@ -84,14 +611,483 @@ const projects = [
     id: 7,
     title: "Bannière Animée LinkedIn",
     shortDescription: "Animation de logo After Effects",
-    description: "Pour ce projet je souhaitais mettre mon logo en avant, alros j'ai décidé ded créér une bannière LinkedIn qui pourrait le mettre en valeur. J'ai créer cette bannière  animée via After Effects",
-    image: "minia linkedin.png",
-    videoFile: "./linkedin-banner.mp4",
-    type: "video"
+    description: "Pour ce projet je souhaitais mettre mon logo en avant, alors j'ai décidé de créer une bannière LinkedIn qui pourrait le mettre en valeur. J'ai créé cette bannière animée via After Effects",
+    image: "https://i.pinimg.com/736x/8d/2c/07/8d2c07207fbcbbecd3345aab8edcea95.jpg",
+    videoFile: "linkedin-banner.mp4",
+    type: "video",
   }  
 ];
 
+// Enhanced Photo Gallery Class
+class EnhancedPhotoGallery {
+  constructor(container, photos, options = {}) {
+    this.container = container;
+    this.photos = photos;
+    this.currentIndex = 0;
+    this.options = {
+      autoPlay: options.autoPlay || false,
+      autoPlayDelay: options.autoPlayDelay || 3000,
+      showThumbnails: options.showThumbnails !== false,
+      showCounter: options.showCounter !== false,
+      enableKeyboard: options.enableKeyboard !== false,
+      enableSwipe: options.enableSwipe !== false,
+      ...options
+    };
+    
+    this.init();
+  }
 
+  init() {
+    this.createGalleryHTML();
+    this.bindEvents();
+    
+    if (this.options.autoPlay) {
+      this.startAutoPlay();
+    }
+    
+    if (this.options.enableSwipe) {
+      this.enableSwipeGestures();
+    }
+  }
+
+  createGalleryHTML() {
+    this.container.innerHTML = `
+      <div class="enhanced-gallery">
+        <div class="gallery-main">
+          <button class="gallery-nav gallery-prev" aria-label="Photo précédente">‹</button>
+          <div class="gallery-display">
+            <img class="gallery-main-img" src="${this.photos[0]}" alt="Photo 1" loading="lazy">
+            <div class="gallery-loading">Chargement...</div>
+          </div>
+          <button class="gallery-nav gallery-next" aria-label="Photo suivante">›</button>
+        </div>
+        
+        ${this.options.showCounter ? `
+          <div class="gallery-info">
+            <span class="gallery-counter">1 / ${this.photos.length}</span>
+          </div>
+        ` : ''}
+        
+        ${this.options.showThumbnails && this.photos.length > 1 ? `
+          <div class="gallery-thumbnails">
+            ${this.photos.map((photo, index) => `
+              <div class="gallery-thumb ${index === 0 ? 'active' : ''}" data-index="${index}">
+                <img src="${photo}" alt="Miniature ${index + 1}" loading="lazy">
+              </div>
+            `).join('')}
+          </div>
+        ` : ''}
+      </div>
+      
+      <style>
+        .enhanced-gallery {
+          width: 100%;
+          max-width: 800px;
+          margin: 0 auto;
+          background: #fff;
+          border-radius: 12px;
+          overflow: hidden;
+          box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+        
+        .gallery-main {
+          position: relative;
+          display: flex;
+          align-items: center;
+          background: #000;
+        }
+        
+        .gallery-display {
+          flex: 1;
+          position: relative;
+          height: 400px;
+          overflow: hidden;
+        }
+        
+        .gallery-main-img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: all 0.4s ease;
+          cursor: zoom-in;
+        }
+        
+        .gallery-loading {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          color: #fff;
+          display: none;
+        }
+        
+        .gallery-nav {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          background: rgba(255,255,255,0.9);
+          border: none;
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          font-size: 24px;
+          cursor: pointer;
+          z-index: 10;
+          transition: all 0.3s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        
+        .gallery-nav:hover {
+          background: rgba(255,255,255,1);
+          transform: translateY(-50%) scale(1.1);
+        }
+        
+        .gallery-prev {
+          left: 15px;
+        }
+        
+        .gallery-next {
+          right: 15px;
+        }
+        
+        .gallery-info {
+          padding: 15px;
+          text-align: center;
+          background: #f8f9fa;
+        }
+        
+        .gallery-counter {
+          font-weight: 600;
+          color: #666;
+        }
+        
+        .gallery-thumbnails {
+          display: flex;
+          gap: 8px;
+          padding: 15px;
+          overflow-x: auto;
+          background: #f8f9fa;
+          border-top: 1px solid #e9ecef;
+        }
+        
+        .gallery-thumb {
+          flex-shrink: 0;
+          width: 60px;
+          height: 60px;
+          border-radius: 6px;
+          overflow: hidden;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          border: 2px solid transparent;
+        }
+        
+        .gallery-thumb:hover {
+          transform: scale(1.1);
+          border-color: #007bff;
+        }
+        
+        .gallery-thumb.active {
+          border-color: #007bff;
+          box-shadow: 0 0 0 2px rgba(0,123,255,0.3);
+        }
+        
+        .gallery-thumb img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+        
+        @media (max-width: 768px) {
+          .gallery-display {
+            height: 250px;
+          }
+          
+          .gallery-nav {
+            width: 40px;
+            height: 40px;
+            font-size: 20px;
+          }
+          
+          .gallery-prev {
+            left: 10px;
+          }
+          
+          .gallery-next {
+            right: 10px;
+          }
+          
+          .gallery-thumb {
+            width: 50px;
+            height: 50px;
+          }
+        }
+      </style>
+    `;
+  }
+
+  bindEvents() {
+    const prevBtn = this.container.querySelector('.gallery-prev');
+    const nextBtn = this.container.querySelector('.gallery-next');
+    const mainImg = this.container.querySelector('.gallery-main-img');
+    const thumbnails = this.container.querySelectorAll('.gallery-thumb');
+
+    if (prevBtn) prevBtn.addEventListener('click', () => this.previousPhoto());
+    if (nextBtn) nextBtn.addEventListener('click', () => this.nextPhoto());
+    if (mainImg) mainImg.addEventListener('click', () => this.openFullscreen());
+
+    thumbnails.forEach((thumb, index) => {
+      thumb.addEventListener('click', () => this.goToPhoto(index));
+    });
+
+    if (this.options.enableKeyboard) {
+      document.addEventListener('keydown', this.handleKeydown.bind(this));
+    }
+
+    // Pause autoplay on hover
+    this.container.addEventListener('mouseenter', () => this.pauseAutoPlay());
+    this.container.addEventListener('mouseleave', () => this.resumeAutoPlay());
+  }
+
+  goToPhoto(index) {
+    if (index < 0 || index >= this.photos.length) return;
+
+    const mainImg = this.container.querySelector('.gallery-main-img');
+    const counter = this.container.querySelector('.gallery-counter');
+    const thumbnails = this.container.querySelectorAll('.gallery-thumb');
+    const loading = this.container.querySelector('.gallery-loading');
+
+    // Show loading
+    if (loading) loading.style.display = 'block';
+
+    // Fade effect
+    mainImg.style.opacity = '0';
+    
+    setTimeout(() => {
+      mainImg.src = this.photos[index];
+      mainImg.alt = `Photo ${index + 1}`;
+      
+      mainImg.onload = () => {
+        mainImg.style.opacity = '1';
+        if (loading) loading.style.display = 'none';
+      };
+      
+      this.currentIndex = index;
+
+      // Update counter
+      if (counter) {
+        counter.textContent = `${index + 1} / ${this.photos.length}`;
+      }
+
+      // Update thumbnails
+      thumbnails.forEach((thumb, i) => {
+        thumb.classList.toggle('active', i === index);
+      });
+    }, 200);
+  }
+
+  previousPhoto() {
+    const newIndex = this.currentIndex > 0 ? this.currentIndex - 1 : this.photos.length - 1;
+    this.goToPhoto(newIndex);
+  }
+
+  nextPhoto() {
+    const newIndex = this.currentIndex < this.photos.length - 1 ? this.currentIndex + 1 : 0;
+    this.goToPhoto(newIndex);
+  }
+
+  handleKeydown(e) {
+    if (e.key === 'ArrowLeft') this.previousPhoto();
+    if (e.key === 'ArrowRight') this.nextPhoto();
+    if (e.key === 'Escape') this.closeFullscreen();
+  }
+
+  startAutoPlay() {
+    this.autoPlayInterval = setInterval(() => {
+      this.nextPhoto();
+    }, this.options.autoPlayDelay);
+  }
+
+  pauseAutoPlay() {
+    if (this.autoPlayInterval) {
+      clearInterval(this.autoPlayInterval);
+    }
+  }
+
+  resumeAutoPlay() {
+    if (this.options.autoPlay) {
+      this.startAutoPlay();
+    }
+  }
+
+  enableSwipeGestures() {
+    let startX = 0;
+    let startY = 0;
+    let endX = 0;
+    let endY = 0;
+
+    const gallery = this.container.querySelector('.gallery-main');
+
+    gallery.addEventListener('touchstart', (e) => {
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+    });
+
+    gallery.addEventListener('touchend', (e) => {
+      endX = e.changedTouches[0].clientX;
+      endY = e.changedTouches[0].clientY;
+      this.handleSwipe();
+    });
+
+    const handleSwipe = () => {
+      const deltaX = startX - endX;
+      const deltaY = startY - endY;
+
+      if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
+        if (deltaX > 0) {
+          this.nextPhoto();
+        } else {
+          this.previousPhoto();
+        }
+      }
+    };
+  }
+
+  openFullscreen() {
+    const modal = document.createElement('div');
+    modal.className = 'gallery-fullscreen-modal';
+    modal.innerHTML = `
+      <div class="fullscreen-overlay">
+        <img src="${this.photos[this.currentIndex]}" alt="Photo en plein écran">
+        <button class="fullscreen-close">&times;</button>
+        <button class="fullscreen-prev">‹</button>
+        <button class="fullscreen-next">›</button>
+        <div class="fullscreen-counter">${this.currentIndex + 1} / ${this.photos.length}</div>
+      </div>
+      
+      <style>
+        .gallery-fullscreen-modal {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100vw;
+          height: 100vh;
+          background: rgba(0,0,0,0.95);
+          z-index: 10000;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        
+        .fullscreen-overlay {
+          position: relative;
+          max-width: 95vw;
+          max-height: 95vh;
+        }
+        
+        .fullscreen-overlay img {
+          max-width: 100%;
+          max-height: 100%;
+          object-fit: contain;
+        }
+        
+        .fullscreen-close {
+          position: absolute;
+          top: -50px;
+          right: 0;
+          background: none;
+          border: none;
+          color: white;
+          font-size: 40px;
+          cursor: pointer;
+        }
+        
+        .fullscreen-prev, .fullscreen-next {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          background: rgba(255,255,255,0.1);
+          border: none;
+          color: white;
+          font-size: 30px;
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          cursor: pointer;
+        }
+        
+        .fullscreen-prev {
+          left: -70px;
+        }
+        
+        .fullscreen-next {
+          right: -70px;
+        }
+        
+        .fullscreen-counter {
+          position: absolute;
+          bottom: -40px;
+          left: 50%;
+          transform: translateX(-50%);
+          color: white;
+          font-size: 16px;
+        }
+      </style>
+    `;
+
+    document.body.appendChild(modal);
+
+    // Event listeners for fullscreen modal
+    const closeBtn = modal.querySelector('.fullscreen-close');
+    const prevBtn = modal.querySelector('.fullscreen-prev');
+    const nextBtn = modal.querySelector('.fullscreen-next');
+    const img = modal.querySelector('img');
+    const counter = modal.querySelector('.fullscreen-counter');
+
+    closeBtn.addEventListener('click', () => this.closeFullscreen());
+    prevBtn.addEventListener('click', () => this.fullscreenPrev());
+    nextBtn.addEventListener('click', () => this.fullscreenNext());
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) this.closeFullscreen();
+    });
+
+    this.fullscreenModal = modal;
+  }
+
+  closeFullscreen() {
+    if (this.fullscreenModal) {
+      this.fullscreenModal.remove();
+      this.fullscreenModal = null;
+    }
+  }
+
+  fullscreenPrev() {
+    this.previousPhoto();
+    this.updateFullscreenImage();
+  }
+
+  fullscreenNext() {
+    this.nextPhoto();
+    this.updateFullscreenImage();
+  }
+
+  updateFullscreenImage() {
+    if (this.fullscreenModal) {
+      const img = this.fullscreenModal.querySelector('img');
+      const counter = this.fullscreenModal.querySelector('.fullscreen-counter');
+      
+      img.src = this.photos[this.currentIndex];
+      counter.textContent = `${this.currentIndex + 1} / ${this.photos.length}`;
+    }
+  }
+}
 
 // Make Windows Draggable
 function makeWindowDraggable(window) {
@@ -194,49 +1190,34 @@ function createProjectDetailPages() {
     
     if (project.type === "interactive") {
       const previewId = `preview-${project.id}`;
-    
+      
       mediaContent = `
         <div class="tab-content active" id="preview-tab">
           <div id="${previewId}" class="preview-container"></div>
         </div>
-        <div class="tab-content" id="html-tab">
-          <pre><code class="language-html">${escapeHtml(project.htmlContent)}</code></pre>
-        </div>
-        <div class="tab-content" id="css-tab">
-          <pre><code class="language-css">${escapeHtml(project.cssContent)}</code></pre>
-        </div>
-        <div class="tab-content" id="js-tab">
-          <pre><code class="language-javascript">${escapeHtml(project.jsContent)}</code></pre>
-        </div>
       `;
-    
-      // Après detailPage.innerHTML = ..., injecte contenu + script/style dynamiquement :
+      
       setTimeout(() => {
         const container = document.getElementById(previewId);
-    
+        
         if (container) {
           container.innerHTML = project.htmlContent;
-    
+          
           const style = document.createElement("style");
           style.textContent = project.cssContent;
           document.head.appendChild(style);
-    
+          
           const script = document.createElement("script");
           script.textContent = project.jsContent;
           document.body.appendChild(script);
         }
       }, 0);
-
-
-
-      
     }
     else if (project.type === "video") {
       if (project.videoFile) {
-        // Cas d'un fichier vidéo local
         mediaContent = `
           <div class="project-detail-video">
-            <div class="project-detail-video-container ${project.bannerDimensions ? 'banner-size' : ''}">
+            <div class="project-detail-video-container">
               <video controls autoplay muted loop>
                 <source src="${project.videoFile}" type="video/mp4">
                 Votre navigateur ne supporte pas les vidéos HTML5.
@@ -249,7 +1230,7 @@ function createProjectDetailPages() {
         if (youtubeId) {
           mediaContent = `
             <div class="project-detail-video">
-              <div class="project-detail-video-container ${project.bannerDimensions ? 'banner-size' : ''}">
+              <div class="project-detail-video-container">
                 <iframe 
                   src="https://www.youtube.com/embed/${youtubeId}" 
                   frameborder="0" 
@@ -260,54 +1241,10 @@ function createProjectDetailPages() {
             </div>
           `;
         }
-      
-    }
- 
-    
-    setTimeout(() => {
-      const container = document.getElementById(previewId);
-  
-      if (container) {
-        container.innerHTML = project.htmlContent;
-  
-        const style = document.createElement("style");
-        style.textContent = project.cssContent;
-        document.head.appendChild(style);
-  
-        const script = document.createElement("script");
-        script.textContent = project.jsContent;
-        document.body.appendChild(script);
       }
-      
-      initPhotoGallery(detailPage);
-    }, 0);
-  }
+    }
     else if (project.type === "photo-gallery" && project.photos && project.photos.length > 0) {
-      mediaContent = `
-        <div class="photo-gallery-container">
-          <div class="gallery-controls">
-            <button class="gallery-nav prev-btn" aria-label="Photo précédente">‹</button>
-            <div class="gallery-counter">
-              <span class="current-photo">1</span> / ${project.photos.length}
-            </div>
-            <button class="gallery-nav next-btn" aria-label="Photo suivante">›</button>
-          </div>
-          <div class="photo-grid">
-            ${project.photos.map((photo, index) => `
-              <div class="photo-item ${index === 0 ? "active" : ""}" data-index="${index}">
-                <img src="${photo}" alt="${project.title} - Photo ${index + 1}" loading="lazy">
-              </div>
-            `).join("")}
-          </div>
-          <div class="photo-thumbnails">
-            ${project.photos.map((photo, index) => `
-              <div class="thumbnail ${index === 0 ? "active" : ""}" data-index="${index}">
-                <img src="${photo}" alt="Miniature ${index + 1}">
-              </div>
-            `).join("")}
-          </div>
-        </div>
-      `;
+      mediaContent = `<div id="gallery-${project.id}" class="enhanced-gallery-container"></div>`;
     }
 
     detailPage.innerHTML = `
@@ -328,35 +1265,20 @@ function createProjectDetailPages() {
 
     container.appendChild(detailPage);
 
-    // Initialize interactive project
-    if (project.type === "interactive") {
-      const script = document.createElement('script');
-      script.textContent = project.jsContent;
-      detailPage.appendChild(script);
-    }
-  });
-
-  // Initialize tab functionality for interactive projects
-  document.querySelectorAll('.code-tabs .tab-button').forEach(button => {
-    button.addEventListener('click', function() {
-      const tabContainer = this.closest('.interactive-project-container');
-      const tabId = this.getAttribute('data-tab');
-      
-      if (tabContainer) {
-        tabContainer.querySelectorAll('.tab-button').forEach(btn => {
-          btn.classList.remove('active');
-        });
-        tabContainer.querySelectorAll('.tab-content').forEach(content => {
-          content.classList.remove('active');
-        });
-        
-        this.classList.add('active');
-        const targetTab = tabContainer.querySelector(`#${tabId}-tab`);
-        if (targetTab) {
-          targetTab.classList.add('active');
+    // Initialize enhanced gallery for photo-gallery projects
+    if (project.type === "photo-gallery" && project.photos && project.photos.length > 0) {
+      setTimeout(() => {
+        const galleryContainer = document.getElementById(`gallery-${project.id}`);
+        if (galleryContainer) {
+          new EnhancedPhotoGallery(galleryContainer, project.photos, {
+            autoPlay: true,
+            autoPlayDelay: 4000,
+            enableKeyboard: true,
+            enableSwipe: true
+          });
         }
-      }
-    });
+      }, 100);
+    }
   });
 }
 
@@ -367,69 +1289,102 @@ function extractYoutubeId(url) {
   return (match && match[2].length === 11) ? match[2] : null;
 }
 
-// Initialize Photo Galleries
-function initPhotoGallery() {
-  document.querySelectorAll(".photo-gallery-container").forEach(container => {
-    const photos = container.querySelectorAll(".photo-item");
-    const thumbnails = container.querySelectorAll(".thumbnail");
-    const prevBtn = container.querySelector(".prev-btn");
-    const nextBtn = container.querySelector(".next-btn");
-    const counter = container.querySelector(".current-photo");
-    
-    if (!photos.length || !thumbnails.length) return;
-    
-    let currentIndex = 0;
-    
-    function showPhoto(index) {
-      photos.forEach(photo => photo.classList.remove("active"));
-      thumbnails.forEach(thumb => thumb.classList.remove("active"));
-      
-      currentIndex = (index + photos.length) % photos.length;
-      photos[currentIndex].classList.add("active");
-      thumbnails[currentIndex].classList.add("active");
-      
-      if (counter) {
-        counter.textContent = currentIndex + 1;
-      }
+// Global modal function for images
+function openImageModal(imageSrc) {
+  const modal = document.createElement('div');
+  modal.className = 'image-modal';
+  modal.innerHTML = `
+    <div class="modal-overlay">
+      <div class="modal-content">
+        <img src="${imageSrc}" alt="Image agrandie">
+        <button class="modal-close" aria-label="Fermer">&times;</button>
+      </div>
+    </div>
+  `;
+  
+  const style = document.createElement('style');
+  style.textContent = `
+    .image-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.9);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+      animation: modalFadeIn 0.3s ease;
     }
     
-    if (prevBtn) {
-      prevBtn.addEventListener("click", () => showPhoto(currentIndex - 1));
+    @keyframes modalFadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
     
-    if (nextBtn) {
-      nextBtn.addEventListener("click", () => showPhoto(currentIndex + 1));
+    .modal-content {
+      position: relative;
+      max-width: 90vw;
+      max-height: 90vh;
     }
     
-    thumbnails.forEach(thumb => {
-      thumb.addEventListener("click", () => {
-        const index = parseInt(thumb.dataset.index);
-        if (!isNaN(index)) {
-          showPhoto(index);
-        }
-      });
-    });
+    .modal-content img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      border-radius: 8px;
+    }
     
-    photos.forEach(photo => {
-      photo.addEventListener("click", () => {
-        photo.classList.toggle("fullscreen");
-      });
-    });
+    .modal-close {
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      background: white;
+      border: none;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
     
-    document.addEventListener("keydown", (e) => {
-      if (container.querySelector(".fullscreen")) {
-        if (e.key === "ArrowLeft") showPhoto(currentIndex - 1);
-        if (e.key === "ArrowRight") showPhoto(currentIndex + 1);
-        if (e.key === "Escape") {
-          photos[currentIndex].classList.remove("fullscreen");
-        }
-      }
-    });
+    .modal-close:hover {
+      background: #f0f0f0;
+      transform: scale(1.1);
+    }
+  `;
+  
+  document.head.appendChild(style);
+  document.body.appendChild(modal);
+  
+  const closeBtn = modal.querySelector('.modal-close');
+  const overlay = modal.querySelector('.modal-overlay');
+  
+  closeBtn.addEventListener('click', () => {
+    modal.remove();
+    style.remove();
+  });
+  
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) {
+      modal.remove();
+      style.remove();
+    }
+  });
+  
+  document.addEventListener('keydown', function handleEscape(e) {
+    if (e.key === 'Escape') {
+      modal.remove();
+      style.remove();
+      document.removeEventListener('keydown', handleEscape);
+    }
   });
 }
-
-
-
 
 // Show Project Detail
 function showProjectDetail(projectId) {
@@ -440,15 +1395,10 @@ function showProjectDetail(projectId) {
     
     const project = projects.find(p => p.id === projectId);
     if (project && project.type === "interactive") {
-      const script = document.createElement('script');
-      script.textContent = project.jsContent;
-      detailPage.appendChild(script);
-    }
-    
-    // Réinitialiser les lecteurs vidéo pour ce projet spécifique
-    if (project && project.type === "video") {
       setTimeout(() => {
-        initVideoPlayers();
+        const script = document.createElement('script');
+        script.textContent = project.jsContent;
+        detailPage.appendChild(script);
       }, 100);
     }
   }
@@ -461,7 +1411,6 @@ function hideProjectDetail(projectId) {
     detailPage.classList.remove("active");
     document.body.style.overflow = "";
     
-    // Arrêter toutes les vidéos dans ce projet
     const videos = detailPage.querySelectorAll("video");
     videos.forEach(video => {
       video.pause();
@@ -473,9 +1422,11 @@ function hideProjectDetail(projectId) {
 // Make global functions available
 window.showProjectDetail = showProjectDetail;
 window.hideProjectDetail = hideProjectDetail;
+window.openImageModal = openImageModal;
 
 // Initialize everything when DOM is loaded
 document.addEventListener("DOMContentLoaded", function() {
+  // Popup functionality
   setTimeout(function() {
     const popup = document.getElementById("popup");
     if (popup) {
@@ -493,13 +1444,13 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 
-  // MODIFICATION : Au lieu de cacher toutes les fenêtres, on les affiche toutes
+  // Show all window stacks
   const allStacks = document.querySelectorAll(".about-window-stack, .search-window-stack, .project-window-stack, .cv-window-stack, .contact-window-stack");
   allStacks.forEach(stack => {
     stack.style.display = "block";
   });
 
-  // Afficher toutes les fenêtres dans chaque stack
+  // Display all windows in each stack
   const aboutStack = document.querySelector(".about-window-stack");
   if (aboutStack) {
     aboutStack.querySelectorAll(".about-window").forEach((win, index) => {
@@ -540,15 +1491,17 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 
-  // Mettre la première fenêtre de projets au premier plan
+  // Make first project window top priority
   const firstProjectWindow = document.querySelector(".project-window-stack .projects-window");
   if (firstProjectWindow) {
     firstProjectWindow.style.zIndex = "20";
   }
 
+  // Make windows draggable
   const windows = document.querySelectorAll(".window, .section-window, .about-window, .projects-window, .cv-window, .contact-window, .search-window");
   windows.forEach(makeWindowDraggable);
 
+  // Folder click functionality
   const folders = document.querySelectorAll(".folder");
   folders.forEach(folder => {
     folder.addEventListener("click", () => {
@@ -597,6 +1550,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   });
 
+  // Close button functionality
   const closeButtons = document.querySelectorAll(".close-button");
   closeButtons.forEach(button => {
     button.addEventListener("click", (e) => {
@@ -618,12 +1572,11 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   });
 
+  // Initialize project components
   createProjectCards();
   createProjectDetailPages();
-  
-  initPhotoGallery();
-  initVideoPlayers();
 
+  // CV download functionality
   const downloadBtn = document.querySelector(".download-cv-btn");
   if (downloadBtn) {
     downloadBtn.addEventListener("click", (e) => {
@@ -632,6 +1585,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 
+  // Folder hover effects
   folders.forEach(folder => {
     folder.addEventListener("mouseenter", () => {
       const icon = folder.querySelector(".folder-icon");
@@ -648,7 +1602,4 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   });
 });
-
-
-
 
