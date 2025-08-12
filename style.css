@@ -999,6 +999,7 @@ h1 {
   }
   
 
+
 /* Supprime tous les contrôles natifs */
 .project-detail-video-container video::-webkit-media-controls-enclosure {
   display: none !important;
@@ -1105,7 +1106,7 @@ h1 {
 }
 
 .gallery-nav {
-  background: rgba(222, 152, 235, 0.7);
+  background: #667eea;
   color: white;
   border: none;
   width: 44px;
