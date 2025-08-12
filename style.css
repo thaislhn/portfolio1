@@ -222,11 +222,13 @@ h1 {
   left: 20px;
   z-index: 1;
   }
+
   .projects-window .window-content {
   height: calc(100% - 30px);
   overflow: auto;
   box-sizing: border-box;
   }
+
   .cv-window-stack {
   position: absolute;
   top: 80px;
@@ -237,6 +239,7 @@ h1 {
   transform: rotate(0deg);
   transition: all 0.3s ease;
   }
+
   .cv-window {
   width: 100%;
   height: 100%;
@@ -246,11 +249,13 @@ h1 {
   background: white;
   transform: rotate(0deg);
   }
+
   .cv-window:nth-child(1) {
   top: 0;
   left: 0;
   z-index: 3;
   }
+
   .cv-window:nth-child(2) {
   top: 10px;
   left: 10px;
@@ -421,7 +426,7 @@ h1 {
   z-index: 1001;
   }
   .project-detail-content {
-  max-width: 950px;
+  max-width: 800px;
   margin: 60px auto 20px;
   padding: 20px;
   }
@@ -763,12 +768,12 @@ h1 {
   border-radius: 4px;
   }
   .photo-thumbnails::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #b6b7bc 0%, #bfb9c4 100%);
   border-radius: 4px;
   transition: background 0.3s ease;
   }
   .photo-thumbnails::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+  background: linear-gradient(135deg, #b2b2b5 0%, #6b46c1 100%);
   }
   .thumbnail {
   flex: 0 0 85px;
@@ -879,15 +884,18 @@ h1 {
   gap: 16px;
   margin: 24px 0;
   }
+
   .photo-gallery .photo-item {
   display: block;
   border-radius: 12px;
   transition: all 0.3s ease;
   }
+
   .photo-gallery .photo-item:hover {
   transform: translateY(-4px);
   box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
   }
+  
   .description {
   white-space: pre-line;
   margin-top: 24px;
@@ -938,7 +946,7 @@ h1 {
   background-color: rgba(0, 0, 0, 0.05);
   }
   .tab-button.active {
-  color: #007bff;
+  color: #a1a9b2;
   border-bottom: 2px solid #007bff;
   background-color: #fff;
   }
@@ -982,22 +990,14 @@ h1 {
   color: #f1e05a;
   }
 
+  
 
-
-/* Style minimaliste pour la vidéo en boucle */
-.project-detail-video-container video {
-  width: 100%;
-  height: auto;
-  display: block;
-  /* Optimisation pour un rendu net */
-  image-rendering: crisp-edges;
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
-  /* Cache tous les contrôles */
-  -webkit-media-controls {
-      display: none !important;
+  .project-detail-video-container video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Remplit en rognant */
   }
-}
+  
 
 /* Supprime tous les contrôles natifs */
 .project-detail-video-container video::-webkit-media-controls-enclosure {
@@ -1393,17 +1393,6 @@ h1 {
   font-size: 16px;
 }
 
-/* Indicateur de chargement */
-.loading-indicator {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  border: 2px solid #f3f3f3;
-  border-top: 2px solid #667eea;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin: 0 auto;
-}
 
 @keyframes spin {
   0% { transform: rotate(0deg); }
@@ -1578,13 +1567,10 @@ h1 {
 
 /* Interactive Projects Styles */
 .interactive-project-container {
-  display: flex;
-  flex-direction: column;
+  height: 300px;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
-  overflow: hidden;
   margin-bottom: 24px;
-  background-color: #fff;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -1686,4 +1672,77 @@ h1 {
   }
 }
 
+
+/* Media Queries pour le responsive */
+@media (max-width: 900px) {
+  #content-wrapper {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  #wrap {
+    margin-right: 0;
+  }
+  
+  .simple-gallery {
+    margin-left: 0;
+    padding-right: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  #wrap {
+    width: 200px;
+    height: 200px;
+  }
+  
+  #box > div {
+    width: 50px;
+    height: 50px;
+  }
+  
+  div#cd {
+    transform: translateZ(-4px) translateX(70px);
+    border-radius: 200px;
+    box-shadow: 0 0 0 3px silver inset,
+                0 0 0 60px #f6f6f6 inset,
+                0 0 0 63px silver inset,
+                0 0 0 85px rgba(255,255,255,0.25) inset;
+  }
+  
+  div#right { left: 192px; }
+  div#bottom { top: 192px; }
+  
+  .gallery-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+  
+  .gallery-grid img {
+    height: 120px;
+  }
+}
+
+@media (max-width: 400px) {
+  #wrap {
+    width: 150px;
+    height: 150px;
+  }
+  
+  #box > div {
+    width: 150px;
+    height: 150px;
+  }
+  
+  div#cd {
+    transform: translateZ(-4px) translateX(50px);
+    border-radius: 150px;
+    box-shadow: 0 0 0 3px silver inset,
+                0 0 0 45px #f6f6f6 inset,
+                0 0 0 48px silver inset,
+                0 0 0 65px rgba(255,255,255,0.25) inset;
+  }
+  
+  div#right { left: 142px; }
+  div#bottom { top: 142px; }
+}
 
