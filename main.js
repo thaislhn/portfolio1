@@ -14,9 +14,9 @@ const projects = [
     image: "https://i.pinimg.com/736x/44/d7/ef/44d7ef24279af92d74609d6885f6ffee.jpg",
     type: "photo-gallery", // nouveau type mixte
     photos: [
-      "https://i.pinimg.com/736x/42/42/9f/42429fdeee88de821ffdb75e2e1daf53.jpg",
-      "https://i.pinimg.com/736x/61/04/ad/6104adf2e7ed6afa9a73f386166368a1.jpg",
-      "https://i.pinimg.com/736x/44/d7/ef/44d7ef24279af92d74609d6885f6ffee.jpg",
+      "mockup pochette1.jpg",
+      "mock.png",
+      "mock up cd.jpg",
       // ajoutez d'autres images de votre pochette CD ici
     ],
    
