@@ -183,6 +183,7 @@ const projects = [
   body, html {
     margin: 0;
     padding: 0;
+    gap: 20%
   }
 
   .full-photo-feed {
@@ -223,7 +224,7 @@ const projects = [
     }
   
     initFullWidthFeed([
-      "mockup pochette 1.jpg",
+      "mockup pochette1.jpg",
       "mock up cd.jpg",
       "mock.png",
     ]);
@@ -256,8 +257,8 @@ const projects = [
     shortDescription: "Modélisation 3D d'une salle d'arcade",
     description: "Dans le cadre d'un workshop d'une semaine, nous avons été amenés à créer un objet 3D inspiré du mouvement Memphis, j'ai donc réalisé une salle d'arcade. Une fusion entre le design Memphis (années 80) et l'esthétique rétro des salles d'arcade (années 70-80).",
     image: "https://i.pinimg.com/736x/95/26/ab/9526ab794482e94d1ea4adaa0febac98.jpg",
-    videoFile: "arcade.mp4",
-    type: "video",
+    videoFile: "./arcade.mp4",
+    type: "video"
   },
   {
     id: 6,
@@ -293,10 +294,11 @@ padding: 0;
 display: flex;
 flex-direction: column;
 align-items: center;
+gap: 20px; /* Espace augmenté entre les photos */
 }
 
 .full-photo-feed img {
-width: 100%;
+width: 90%;
 height: auto;
 display: block;
 }
@@ -406,7 +408,6 @@ class EnhancedPhotoGallery {
 
   createGalleryHTML() {
     if (!this.container) {
-      console.error('Container non trouvé');
       return;
     }
 
@@ -414,20 +415,16 @@ class EnhancedPhotoGallery {
       <div class="enhanced-gallery">
         <div class="gallery-main">
           <div class="gallery-display">
-            <img class="gallery-main-img" src="${this.photos[0]}" alt="" loading="lazy">
           </div>
         </div>
         
         ${this.options.showCounter ? `
-          <div class="gallery-info">
-          </div>
+        
         ` : ''}
         
         ${this.options.showThumbnails && this.photos.length > 1 ? `
           <div class="gallery-thumbnails">
             ${this.photos.map((photo, index) => `
-              <div class="gallery-thumb ${index === 0 ? 'active' : ''}" data-index="${index}">
-                <img src="${photo}" alt="Miniature ${index + 1}" loading="lazy">
               </div>
             `).join('')}
           </div>
@@ -1173,4 +1170,12 @@ document.addEventListener("DOMContentLoaded", function() {
   });
   
   console.log('Initialisation terminée');
+});
+
+// Animation au scroll
+window.addEventListener('scroll', function() {
+  const gallery = document.querySelector('.project-gallery');
+  if (gallery) {
+    gallery.classList.toggle('scrolling-effect', window.scrollY > 100);
+  }
 });
