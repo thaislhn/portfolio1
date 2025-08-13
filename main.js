@@ -363,6 +363,39 @@ init3DCD();
 
 
 
+function initFullWidthFeed(photos) {
+  const feed = document.querySelector('.full-photo-feed');
+  if (!feed || !Array.isArray(photos)) return;
+
+  // Nouvelle version avec lazy loading
+  feed.innerHTML = photos.map(src => 
+    `<img src="" data-src="${src}" alt="Photo du projet" loading="lazy" class="lazy-image">`
+  ).join('');
+
+  // Observer pour le lazy loading
+  if ('IntersectionObserver' in window) {
+    const lazyImageObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const lazyImage = entry.target;
+          lazyImage.src = lazyImage.dataset.src;
+          lazyImage.classList.remove('lazy-image');
+          lazyImageObserver.unobserve(lazyImage);
+        }
+      });
+    });
+
+    document.querySelectorAll('.lazy-image').forEach(lazyImage => {
+      lazyImageObserver.observe(lazyImage);
+    });
+  } else {
+    // Fallback pour les navigateurs qui ne supportent pas IntersectionObserver
+    document.querySelectorAll('.lazy-image').forEach(lazyImage => {
+      lazyImage.src = lazyImage.dataset.src;
+    });
+  }
+}
+
 // Enhanced Photo Gallery Class - VERSION CORRIGÉE
 class EnhancedPhotoGallery {
   constructor(container, photos, options = {}) {
