@@ -296,7 +296,6 @@ const projects = [
 
       initFullWidthFeed([
       "blende1.jpeg",
-      "blender1.jpeg",
       "blender2.jpeg",
       "blender3.jpeg",
 
