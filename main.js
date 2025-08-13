@@ -256,8 +256,8 @@ const projects = [
     shortDescription: "Modélisation 3D d'une salle d'arcade",
     description: "Dans le cadre d'un workshop d'une semaine, nous avons été amenés à créer un objet 3D inspiré du mouvement Memphis, j'ai donc réalisé une salle d'arcade. Une fusion entre le design Memphis (années 80) et l'esthétique rétro des salles d'arcade (années 70-80).",
     image: "https://i.pinimg.com/736x/95/26/ab/9526ab794482e94d1ea4adaa0febac98.jpg",
-    videoFile: "./arcade.mp4",
-    type: "video"
+    videoFile: "arcade.mp4",
+    type: "video",
   },
   {
     id: 6,
