@@ -13,48 +13,26 @@ const projects = [
     description: "Dans le cadre d'un projet à l'école, on devait créer la pochette d'un artiste. J'ai choisi la cover réalisée par une artiste, puis de la transformer en y ajoutant mes propres éléments. J'ai travaillé en mélangeant mes propres dessins et textures avec des retouches, en passant par Illustrator, InDesign et Photoshop. Je voulais trouver une façon originale de présenter ma cover. Comme je cherchais aussi à ajouter de la 3D à mon portfolio, ce projet a été l'occasion parfaite pour expérimenter la modélisation via le code et montrer une autre une version de la pochette.",
     image: "https://i.pinimg.com/736x/44/d7/ef/44d7ef24279af92d74609d6885f6ffee.jpg",
     type: "interactive",
-    photos: [
-      "https://images.pexels.com/photos/1763075/pexels-photo-1763075.jpeg",
-      "https://images.pexels.com/photos/167092/pexels-photo-167092.jpeg",
-      "https://images.pexels.com/photos/1370545/pexels-photo-1370545.jpeg",
-      "https://images.pexels.com/photos/2736834/pexels-photo-2736834.jpeg"
-    ],
+    
     htmlContent: `
       <div class="interactive-project-layout">
-        <div class="cd-container">
-          <section id="wrap">
-            <div id="box">
-              <div id="front"></div>
-              <div id="cd"></div>
-              <div id="back"></div>
-              <div id="left"></div>
-              <div id="right"></div>
-              <div id="top"></div>
-              <div id="bottom"></div>
-            </div>  
-          </section>
-        </div>
-        
-        <div class="project-gallery">
-          <h3>Galerie du projet</h3>
-          <div class="gallery-preview">
-            <img id="main-gallery-img" src="https://images.pexels.com/photos/1763075/pexels-photo-1763075.jpeg" alt="Image principale">
-          </div>
-          <div class="gallery-thumbnails-horizontal">
-            <div class="thumbnail-container">
-              <img class="gallery-thumb active" src="mockup pochette1.jpg"," data-index="0">
-              <img class="gallery-thumb" src= "mock.png" data-index="1">
-              <img class="gallery-thumb" src= "mock up cd.jpg" data-index="2">
-            </div>
-            <div class="gallery-controls">
-              <button class="gallery-btn prev-gallery" aria-label="Précédent">‹</button>
-              <span class="gallery-counter"><span class="current">1</span>/<span class="total">4</span></span>
-              <button class="gallery-btn next-gallery" aria-label="Suivant">›</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    `,
+    <div class="cd-container">
+      <section id="wrap">
+        <div id="box">
+          <div id="front"></div>
+          <div id="cd"></div>
+          <div id="back"></div>
+          <div id="left"></div>
+          <div id="right"></div>
+          <div id="top"></div>
+          <div id="bottom"></div>
+        </div>  
+      </section>
+    </div>
+
+    <div class="full-photo-feed"></div>
+  </div>
+`,
     cssContent: `
 
     
@@ -200,209 +178,58 @@ const projects = [
         filter: drop-shadow(3px 3px 6px rgba(0,0,0,0.3));
       }
     }
-    `,
+
+
+  body, html {
+    margin: 0;
+    padding: 0;
+  }
+
+  .full-photo-feed {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .full-photo-feed img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+`,
     jsContent: `
-      // Cette fonction sera appelée quand le contenu HTML du projet CD est injecté
-      function initInteractiveGallery() {
-        console.log('Initialisation de la galerie interactive...');
-        
-        // Attendre que les éléments soient dans le DOM
-        setTimeout(() => {
-          const mainImg = document.getElementById('main-gallery-img');
-          const thumbnails = document.querySelectorAll('.gallery-thumb');
-          const prevBtn = document.querySelector('.prev-gallery');
-          const nextBtn = document.querySelector('.next-gallery');
-          const currentCounter = document.querySelector('.gallery-counter .current');
-          const totalCounter = document.querySelector('.gallery-counter .total');
-          
-          console.log('Éléments trouvés:', {
-            mainImg: !!mainImg,
-            thumbnails: thumbnails.length,
-            prevBtn: !!prevBtn,
-            nextBtn: !!nextBtn
+    function initFullWidthFeed(photos) {
+      const feed = document.querySelector('.full-photo-feed');
+      if (!feed || !Array.isArray(photos)) return;
+  
+      feed.innerHTML = photos.map(src => 
+        \`<img src="\${src}" alt="Photo du projet">\`
+      ).join('');
+    }
+  
+    function init3DCD() {
+      setTimeout(() => {
+        const box = document.querySelector('#box');
+        if (box) {
+          box.style.transformOrigin = 'center center';
+          box.addEventListener('mouseenter', () => {
+            box.style.animationPlayState = 'paused';
           });
-          
-          if (!mainImg || !thumbnails.length) {
-            console.log('Éléments de galerie non trouvés, abandon...');
-            return;
-          }
-          
-          // Images synchronisées avec le HTML
-          const images = [
-            "mock up cd.jpg",
-            "mock.png", 
-            "mock up cd.jpg",
-            
-          ];
-          
-          let currentIndex = 0;
-          
-          // Mettre à jour le compteur total
-          if (totalCounter) {
-            totalCounter.textContent = images.length;
-          }
-          
-          function updateGallery(index) {
-            if (index < 0 || index >= images.length) {
-              console.log('Index hors limites:', index);
-              return;
-            }
-            
-            console.log('Mise à jour galerie index:', index, 'Image:', images[index]);
-            currentIndex = index;
-            
-            // Animation de fade
-            mainImg.style.opacity = '0.3';
-            mainImg.style.transform = 'scale(0.95)';
-            
-            setTimeout(() => {
-              mainImg.src = images[currentIndex];
-              mainImg.style.opacity = '1';
-              mainImg.style.transform = 'scale(1)';
-            }, 150);
-            
-            // Mettre à jour les miniatures
-            thumbnails.forEach((thumb, i) => {
-              thumb.classList.toggle('active', i === currentIndex);
-            });
-            
-            // Mettre à jour le compteur
-            if (currentCounter) {
-              currentCounter.textContent = currentIndex + 1;
-            }
-          }
-          
-          // Clicks sur les miniatures
-          thumbnails.forEach((thumb, index) => {
-            thumb.addEventListener('click', (e) => {
-              e.preventDefault();
-              console.log('Miniature cliquée:', index);
-              updateGallery(index);
-            });
+          box.addEventListener('mouseleave', () => {
+            box.style.animationPlayState = 'running';
           });
-          
-          // Boutons de navigation
-          if (prevBtn) {
-            prevBtn.addEventListener('click', (e) => {
-              e.preventDefault();
-              const newIndex = currentIndex > 0 ? currentIndex - 1 : images.length - 1;
-              console.log('Bouton précédent cliqué, nouvel index:', newIndex);
-              updateGallery(newIndex);
-            });
-          }
-          
-          if (nextBtn) {
-            nextBtn.addEventListener('click', (e) => {
-              e.preventDefault();
-              const newIndex = currentIndex < images.length - 1 ? currentIndex + 1 : 0;
-              console.log('Bouton suivant cliqué, nouvel index:', newIndex);
-              updateGallery(newIndex);
-            });
-          }
-          
-          // Navigation au clavier (uniquement pour cette galerie)
-          function handleGalleryKeydown(e) {
-            // Vérifier que la galerie est visible
-            const galleryContainer = document.querySelector('.project-gallery');
-            if (!galleryContainer || !galleryContainer.offsetParent) {
-              return;
-            }
-            
-            if (e.key === 'ArrowLeft') {
-              e.preventDefault();
-              const newIndex = currentIndex > 0 ? currentIndex - 1 : images.length - 1;
-              updateGallery(newIndex);
-            } else if (e.key === 'ArrowRight') {
-              e.preventDefault();
-              const newIndex = currentIndex < images.length - 1 ? currentIndex + 1 : 0;
-              updateGallery(newIndex);
-            }
-          }
-          
-          document.addEventListener('keydown', handleGalleryKeydown);
-          
-          // Click sur l'image principale pour fullscreen
-          if (mainImg) {
-            mainImg.addEventListener('click', () => {
-              openImageModal(images[currentIndex]);
-            });
-          }
-          
-          // Auto-play de la galerie
-          let autoPlayInterval;
-          
-          function startAutoPlay() {
-            if (autoPlayInterval) clearInterval(autoPlayInterval);
-            autoPlayInterval = setInterval(() => {
-              const newIndex = currentIndex < images.length - 1 ? currentIndex + 1 : 0;
-              updateGallery(newIndex);
-            }, 4000);
-          }
-          
-          function stopAutoPlay() {
-            if (autoPlayInterval) {
-              clearInterval(autoPlayInterval);
-              autoPlayInterval = null;
-            }
-          }
-          
-          // Démarrer l'autoplay et le mettre en pause au survol
-          const galleryContainer = document.querySelector('.project-gallery');
-          if (galleryContainer) {
-            setTimeout(startAutoPlay, 2000);
-            
-            galleryContainer.addEventListener('mouseenter', stopAutoPlay);
-            galleryContainer.addEventListener('mouseleave', () => {
-              setTimeout(startAutoPlay, 1000);
-            });
-          }
-          
-          // Initialisation
-          updateGallery(0);
-          console.log('Galerie initialisée avec succès');
-          
-        }, 100); // Petit délai pour s'assurer que le DOM est prêt
-      }
-
-      
-      
-      function init3DCD() {
-        setTimeout(() => {
-          const box = document.querySelector('#box');
-          if (box) {
-            box.style.transformOrigin = 'center center';
-            
-            // Pause de l'animation au survol
-            box.addEventListener('mouseenter', () => {
-              box.style.animationPlayState = 'paused';
-            });
-            
-            box.addEventListener('mouseleave', () => {
-              box.style.animationPlayState = 'running';
-            });
-          }
-        }, 100);
-      }
-
-      // Exemple après avoir affiché le projet
-const galleryContainer = document.querySelector('.project-gallery'); 
-const photos = [
-            "mock up cd.jpg",
-            "mock.png", 
-            "mock up cd.jpg",
-            
-          ];
-
-// Création de la galerie interactive
-new EnhancedPhotoGallery(galleryContainer, photos, {
-  autoPlay: true,
-  autoPlayDelay: 4000,
-  showThumbnails: true,
-  showCounter: true
-});
-
-
-    `
+        }
+      }, 100);
+    }
+  
+    initFullWidthFeed([
+      "mockup pochette 1.jpg",
+      "mock up cd.jpg",
+      "mock.png",
+    ]);
+  
+    init3DCD();
+  `
   },
   {
     id: 1,
