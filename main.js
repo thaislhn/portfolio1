@@ -257,8 +257,54 @@ const projects = [
     shortDescription: "Modélisation 3D d'une salle d'arcade",
     description: "Dans le cadre d'un workshop d'une semaine, nous avons été amenés à créer un objet 3D inspiré du mouvement Memphis, j'ai donc réalisé une salle d'arcade. Une fusion entre le design Memphis (années 80) et l'esthétique rétro des salles d'arcade (années 70-80).",
     image: "https://i.pinimg.com/736x/95/26/ab/9526ab794482e94d1ea4adaa0febac98.jpg",
-    videoFile: "/portfolio1/arcade.mp4",
-    type: "video"
+    type: "interactive" ,
+    htmlContent: `
+
+    <div class="full-photo-feed"></div>
+    </div>
+    `,
+    cssContent: `
+      body, html {
+      margin: 0;
+      padding: 0;
+      }
+
+      .full-photo-feed {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px; /* Espace augmenté entre les photos */
+      }
+
+      .full-photo-feed img {
+      width: 90%;
+      height: auto;
+      display: block;
+      }
+      `,
+      jsContent: `
+      function initFullWidthFeed(photos) {
+      const feed = document.querySelector('.full-photo-feed');
+      if (!feed || !Array.isArray(photos)) return;
+
+      feed.innerHTML = photos.map(src => 
+        \`<img src="\${src}" alt="Photo du projet">\`
+      ).join('');
+      }
+
+
+
+      initFullWidthFeed([
+      "blende1.jpeg",
+      "blender1.jpeg",
+      "blender2.jpeg",
+      "blender3.jpeg",
+
+           
+      ]);
+
+      init3DCD();
+      `
   },
   {
     id: 6,
@@ -315,20 +361,7 @@ feed.innerHTML = photos.map(src =>
 ).join('');
 }
 
-function init3DCD() {
-setTimeout(() => {
-  const box = document.querySelector('#box');
-  if (box) {
-    box.style.transformOrigin = 'center center';
-    box.addEventListener('mouseenter', () => {
-      box.style.animationPlayState = 'paused';
-    });
-    box.addEventListener('mouseleave', () => {
-      box.style.animationPlayState = 'running';
-    });
-  }
-}, 100);
-}
+
 
 initFullWidthFeed([
 "https://i.pinimg.com/736x/87/e5/ce/87e5ce65acde203b14024090af10d015.jpg",
@@ -1212,3 +1245,4 @@ window.addEventListener('scroll', function() {
     gallery.classList.toggle('scrolling-effect', window.scrollY > 100);
   }
 });
+
