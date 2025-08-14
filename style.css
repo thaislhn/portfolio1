@@ -88,8 +88,8 @@ h1 {
 }
 
 .window-header {
-  background: #070507;
-  color: #eeff52;
+  background: #000000;
+  color: #d9ef35;
   padding: 8px 15px;
   display: flex;
   justify-content: space-between;
@@ -520,13 +520,16 @@ h1 {
   margin-bottom: 15px;
   margin-top: 25px;
   }
+  
   .cv-content h3:first-child {
   margin-top: 0;
   }
+
   .cv-content ul {
   list-style-type: none;
   margin-left: 20px;
   }
+
   .cv-content li {
   margin-bottom: 10px;
   position: relative;
@@ -571,7 +574,6 @@ h1 {
   cursor: pointer;
   color: white !important;
   -webkit-text-stroke: 0 !important;
-  text-stroke: 0 !important;
   z-index: 10;
   }
 
@@ -827,18 +829,18 @@ h1 {
 
   /* CENTRE LE PORTFOLIO */
   .project-window-stack {
-      position: relative;
-      width: 350px;
-      height: 350px;
-      top: 0;
-      left: 0;
-      transform: none !important;
-      padding: 10%
+    position: absolute; 
+    left: 15%;
+    top: 40%;
+    transform: translate(-50%, -50%);   
+    width: 90px;
+    height: 250px;
+    padding: 10%;
   }
 
   .projects-window {
       font-size: 20px;
-      width: 350px;
+      width: 330px;
       height: 700px;
       min-height: 550px;
   }
@@ -879,8 +881,7 @@ h1 {
 
   .cv-window-stack {
       top: 65%;
-      right: 10px;
-      left: 20px;
+      left: 10px;
       width: 230px;
       height: 110px;
 
@@ -888,9 +889,9 @@ h1 {
 
   .contact-window-stack {
       position: absolute;
-      top: 67%;
-      left: 35%;
-      width: 250px;
+      top: 80%;
+      left: 30%;
+      width: 220px;
       height: 100px;
   }
   
