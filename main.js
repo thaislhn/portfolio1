@@ -5,6 +5,96 @@ function escapeHtml(html) {
   return div.innerHTML;
 }
 
+// Helper Functions
+function escapeHtml(html) {
+  const div = document.createElement('div');
+  div.textContent = html;
+  return div.innerHTML;
+}
+
+// Fonction principale avec lazy loading complet
+function initFullWidthFeed(photos) {
+  const feed = document.querySelector('.full-photo-feed');
+  if (!feed || !Array.isArray(photos)) return;
+
+  // Afficher un loader pendant le chargement
+  feed.innerHTML = '<div class="image-loader">Chargement des images...</div>';
+
+  // Timeout de secours
+  const loadingTimeout = setTimeout(() => {
+    if (feed.querySelector('.image-loader')) {
+      feed.innerHTML = '<div class="image-error">Chargement trop long - Réessayez</div>';
+    }
+  }, 10000); // 10 secondes timeout
+
+  // Préchargement amélioré avec gestion d'erreur
+  const loadImages = photos.map(src => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.src = src;
+      img.onload = () => {
+        clearTimeout(loadingTimeout);
+        resolve({src, status: 'loaded'});
+      };
+      img.onerror = () => resolve({src, status: 'error'});
+    });
+  });
+
+  Promise.all(loadImages).then(results => {
+    clearTimeout(loadingTimeout);
+    const loadedImages = results.filter(img => img.status === 'loaded');
+    
+    if (loadedImages.length === 0) {
+      feed.innerHTML = '<div class="image-error">Aucune image n\'a pu être chargée</div>';
+      return;
+    }
+
+    // Création du HTML avec lazy loading
+    feed.innerHTML = loadedImages.map(img => `
+      <div class="image-container">
+        <img 
+          src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E" 
+          data-src="${img.src}" 
+          alt="Photo du projet" 
+          loading="lazy"
+          class="lazy-image"
+          onload="this.parentElement.classList.add('loaded')"
+          onerror="this.parentElement.classList.add('error')"
+        >
+        <div class="image-placeholder"></div>
+      </div>
+    `).join('');
+
+    // Lazy loading avec IntersectionObserver
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const img = entry.target;
+            img.src = img.dataset.src;
+            observer.unobserve(img);
+          }
+        });
+      }, {
+        rootMargin: '200px',
+        threshold: 0.01
+      });
+
+      document.querySelectorAll('.lazy-image').forEach(img => {
+        observer.observe(img);
+      });
+    } else {
+      // Fallback pour les vieux navigateurs
+      document.querySelectorAll('.lazy-image').forEach(img => {
+        img.src = img.dataset.src;
+      });
+    }
+  }).catch(error => {
+    console.error('Erreur de chargement des images:', error);
+    feed.innerHTML = '<div class="image-error">Erreur de chargement</div>';
+  });
+}
+
 const projects = [
   {
     id: 5,
@@ -34,9 +124,6 @@ const projects = [
   </div>
 `,
     cssContent: `
-
-    
-    
     
     /* CD 3D Styles */
     :root {
@@ -319,8 +406,6 @@ htmlContent: `
 <div class="full-photo-feed"></div>
 </div>
 `,
-
-// CSS dans cssContent
 cssContent: `
 body, html {
 margin: 0;
@@ -340,8 +425,6 @@ height: auto;
 display: block;
 }
 `,
-
-// JS dans jsContent
 jsContent: `
   initFullWidthFeed( [
       "https://i.pinimg.com/736x/87/e5/ce/87e5ce65acde203b14024090af10d015.jpg",
@@ -370,9 +453,6 @@ jsContent: `
     type: "video"
   }  
 ];
-
-
-
 
 function initFullWidthFeed(photos) {
   const feed = document.querySelector('.full-photo-feed');
@@ -501,7 +581,6 @@ class EnhancedPhotoGallery {
       document.head.appendChild(style);
     }
   }
-
   
   handleKeydown(e) {
     // Vérifier que la galerie est visible
@@ -592,8 +671,6 @@ class EnhancedPhotoGallery {
         <div class="fullscreen-counter">${this.currentIndex + 1} / ${this.photos.length}</div>
       </div>
     `;
-
-    c
 
     document.head.appendChild(style);
     document.body.appendChild(modal);
