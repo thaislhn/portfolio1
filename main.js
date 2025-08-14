@@ -199,15 +199,6 @@ const projects = [
   }
 `,
     jsContent: `
-    function initFullWidthFeed(photos) {
-      const feed = document.querySelector('.full-photo-feed');
-      if (!feed || !Array.isArray(photos)) return;
-  
-      feed.innerHTML = photos.map(src => 
-        \`<img src="\${src}" alt="Photo du projet">\`
-      ).join('');
-    }
-  
     function init3DCD() {
       setTimeout(() => {
         const box = document.querySelector('#box');
@@ -296,6 +287,7 @@ const projects = [
 
       initFullWidthFeed([
       "blende1.jpeg",
+      "blender1.jpeg",
       "blender2.jpeg",
       "blender3.jpeg",
 
@@ -351,19 +343,8 @@ display: block;
 
 // JS dans jsContent
 jsContent: `
-function initFullWidthFeed(photos) {
-const feed = document.querySelector('.full-photo-feed');
-if (!feed || !Array.isArray(photos)) return;
-
-feed.innerHTML = photos.map(src => 
-  \`<img src="\${src}" alt="Photo du projet">\`
-).join('');
-}
-
-
-
-initFullWidthFeed([
-"https://i.pinimg.com/736x/87/e5/ce/87e5ce65acde203b14024090af10d015.jpg",
+  initFullWidthFeed( [
+      "https://i.pinimg.com/736x/87/e5/ce/87e5ce65acde203b14024090af10d015.jpg",
       "https://i.pinimg.com/736x/89/8e/8b/898e8b2fab7726fd3d363bf4da05d0b2.jpg",
       "https://i.pinimg.com/736x/38/9e/ee/389eee4f1d0006132a69325dc767a5bc.jpg",
       "https://i.pinimg.com/736x/eb/c7/54/ebc75472fd5db45d314b9b7930b8c9a7.jpg",
@@ -375,9 +356,7 @@ initFullWidthFeed([
       "https://i.pinimg.com/736x/bf/17/2d/bf172d76f3c9259386e41d5b25f969f6.jpg",
       "https://i.pinimg.com/736x/37/a8/ba/37a8ba1aceed2f170305d2ced22da4f8.jpg",
       "https://i.pinimg.com/736x/53/b9/a6/53b9a67e07bda74411dff4cc28e3a1eb.jpg"
-]);
-
-init3DCD();
+    ]);
 `
 
   },
