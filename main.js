@@ -4,18 +4,14 @@ function escapeHtml(html) {
   div.textContent = html;
   return div.innerHTML;
 }
-
-// Helper Functions
-function escapeHtml(html) {
-  const div = document.createElement('div');
-  div.textContent = html;
-  return div.innerHTML;
-}
-
-// Fonction principale avec lazy loading complet
+// Fonction principale avec lazy loading complet et URLs corrigées
 function initFullWidthFeed(photos) {
+  console.log('initFullWidthFeed appelée avec:', photos);
   const feed = document.querySelector('.full-photo-feed');
-  if (!feed || !Array.isArray(photos)) return;
+  if (!feed || !Array.isArray(photos)) {
+    console.error('Feed non trouvé ou photos non valides:', feed, photos);
+    return;
+  }
 
   // Afficher un loader pendant le chargement
   feed.innerHTML = '<div class="image-loader">Chargement des images...</div>';
@@ -25,7 +21,7 @@ function initFullWidthFeed(photos) {
     if (feed.querySelector('.image-loader')) {
       feed.innerHTML = '<div class="image-error">Chargement trop long - Réessayez</div>';
     }
-  }, 10000); // 10 secondes timeout
+  }, 10000); // 15 secondes timeout
 
   // Préchargement amélioré avec gestion d'erreur
   const loadImages = photos.map(src => {
@@ -33,16 +29,21 @@ function initFullWidthFeed(photos) {
       const img = new Image();
       img.src = src;
       img.onload = () => {
-        clearTimeout(loadingTimeout);
+        console.log('Image chargée:', src);
         resolve({src, status: 'loaded'});
       };
-      img.onerror = () => resolve({src, status: 'error'});
+      img.onerror = () => {
+        console.error('Erreur chargement image:', src);
+        resolve({src, status: 'error'});
+      };
     });
   });
 
   Promise.all(loadImages).then(results => {
     clearTimeout(loadingTimeout);
     const loadedImages = results.filter(img => img.status === 'loaded');
+    
+    console.log('Images chargées:', loadedImages.length, '/', photos.length);
     
     if (loadedImages.length === 0) {
       feed.innerHTML = '<div class="image-error">Aucune image n\'a pu être chargée</div>';
@@ -53,42 +54,22 @@ function initFullWidthFeed(photos) {
     feed.innerHTML = loadedImages.map(img => `
       <div class="image-container">
         <img 
-          src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E" 
-          data-src="${img.src}" 
+          src="${img.src}" 
           alt="Photo du projet" 
           loading="lazy"
-          class="lazy-image"
           onload="this.parentElement.classList.add('loaded')"
           onerror="this.parentElement.classList.add('error')"
         >
-        <div class="image-placeholder"></div>
       </div>
     `).join('');
 
-    // Lazy loading avec IntersectionObserver
-    if ('IntersectionObserver' in window) {
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            const img = entry.target;
-            img.src = img.dataset.src;
-            observer.unobserve(img);
-          }
-        });
-      }, {
-        rootMargin: '200px',
-        threshold: 0.01
+    // Ajouter la classe loaded immédiatement pour les images déjà chargées
+    setTimeout(() => {
+      document.querySelectorAll('.image-container').forEach(container => {
+        container.classList.add('loaded');
       });
+    }, 100);
 
-      document.querySelectorAll('.lazy-image').forEach(img => {
-        observer.observe(img);
-      });
-    } else {
-      // Fallback pour les vieux navigateurs
-      document.querySelectorAll('.lazy-image').forEach(img => {
-        img.src = img.dataset.src;
-      });
-    }
   }).catch(error => {
     console.error('Erreur de chargement des images:', error);
     feed.innerHTML = '<div class="image-error">Erreur de chargement</div>';
@@ -303,7 +284,7 @@ const projects = [
   
     initFullWidthFeed([
       "mockup pochette1.jpg",
-      "mock up cd.jpg",
+      "https://res.cloudinary.com/diai5g2u8/image/upload/v1755268100/mock_up_cd_iiiz03.jpg",
       "mock.png",
     ]);
   
@@ -373,10 +354,10 @@ const projects = [
 
 
       initFullWidthFeed([
-      "blende1.jpeg",
-      "blender1.jpeg",
-      "blender2.jpeg",
-      "blender3.jpeg",
+      "https://res.cloudinary.com/diai5g2u8/image/upload/v1755268007/blende1_lzzmaq.jpg",
+      "https://res.cloudinary.com/diai5g2u8/image/upload/v1755268007/1_sjrgpx.jpg",
+      "https://res.cloudinary.com/diai5g2u8/image/upload/v1755268932/blender2_gqjowv.jpg",
+      "https://res.cloudinary.com/diai5g2u8/image/upload/v1755268933/blender3_hzfgcb.jpg",
 
            
       ]);
@@ -426,7 +407,17 @@ display: block;
 }
 `,
 jsContent: `
-  initFullWidthFeed( [
+
+ function initFullWidthFeed(photos) {
+      const feed = document.querySelector('.full-photo-feed');
+      if (!feed || !Array.isArray(photos)) return;
+
+      feed.innerHTML = photos.map(src => 
+        \`<img src="\${src}" alt="Photo du projet">\`
+      ).join('');
+      }
+
+  initFullWidthFeed([
       "https://i.pinimg.com/736x/87/e5/ce/87e5ce65acde203b14024090af10d015.jpg",
       "https://i.pinimg.com/736x/89/8e/8b/898e8b2fab7726fd3d363bf4da05d0b2.jpg",
       "https://i.pinimg.com/736x/38/9e/ee/389eee4f1d0006132a69325dc767a5bc.jpg",
@@ -438,10 +429,13 @@ jsContent: `
       "https://i.pinimg.com/736x/2f/c8/db/2fc8dbfbc502ae04291b59d613898c20.jpg",
       "https://i.pinimg.com/736x/bf/17/2d/bf172d76f3c9259386e41d5b25f969f6.jpg",
       "https://i.pinimg.com/736x/37/a8/ba/37a8ba1aceed2f170305d2ced22da4f8.jpg",
-      "https://i.pinimg.com/736x/53/b9/a6/53b9a67e07bda74411dff4cc28e3a1eb.jpg"
-    ]);
-`
+      "https://i.pinimg.com/736x/53/b9/a6/53b9a67e07bda74411dff4cc28e3a1eb.jpg",
+      "https://res.cloudinary.com/diai5g2u8/image/upload/v1755269113/DSC05395_2_dpdazp.jpg",
+      "https://res.cloudinary.com/diai5g2u8/image/upload/v1755269114/IMG_3410_s2joqt.jpg",
+  ]);
 
+      init3DCD();
+      `
   },
   {
     id: 7,
