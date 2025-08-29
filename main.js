@@ -1,40 +1,108 @@
+// Variables globales pour gérer l'état des projets
+let currentProjectId = null;
+let activeProjectStyles = new Map();
+let activeEventListeners = new Map();
+
 // Helper Functions
 function escapeHtml(html) {
   const div = document.createElement('div');
   div.textContent = html;
   return div.innerHTML;
 }
-// Fonction principale avec lazy loading complet et URLs corrigées
+
+// Fonction CORRIGÉE pour nettoyer complètement l'état précédent
+function cleanupPreviousProject() {
+  console.log('🧹 Nettoyage complet de l\'état précédent...');
+  
+  // 1. Supprimer TOUS les styles de projets précédents
+  activeProjectStyles.forEach((styleElement, projectId) => {
+    if (styleElement && styleElement.parentNode) {
+      console.log('Suppression des styles du projet:', projectId);
+      styleElement.parentNode.removeChild(styleElement);
+    }
+  });
+  activeProjectStyles.clear();
+  
+  // 2. Nettoyer tous les conteneurs de galeries
+  const allGalleryFeeds = document.querySelectorAll('.full-photo-feed');
+  allGalleryFeeds.forEach(feed => {
+    feed.innerHTML = '';
+    feed.style.cssText = '';
+  });
+  
+  // 3. Supprimer tous les éléments 3D du projet CD
+  const cdElements = document.querySelectorAll('#wrap, #box, .interactive-project-layout, .cd-container');
+  cdElements.forEach(element => {
+    if (element.parentNode) {
+      element.parentNode.removeChild(element);
+    }
+  });
+  
+  // 4. Reset des variables CSS personnalisées
+  document.documentElement.style.removeProperty('--box-color');
+  
+  // 5. Supprimer toutes les animations actives
+  const animatedElements = document.querySelectorAll('[style*="animation"]');
+  animatedElements.forEach(el => {
+    el.style.animation = 'none';
+  });
+  
+  console.log('✅ Nettoyage terminé');
+}
+
+// Fonction AMÉLIORÉE pour initialiser les galeries photos
 function initFullWidthFeed(photos) {
-  console.log('initFullWidthFeed appelée avec:', photos);
+  console.log('🖼️ initFullWidthFeed appelée avec:', photos);
+  
   const feed = document.querySelector('.full-photo-feed');
-  if (!feed || !Array.isArray(photos)) {
-    console.error('Feed non trouvé ou photos non valides:', feed, photos);
+  if (!feed) {
+    console.error('❌ Conteneur .full-photo-feed non trouvé');
+    return;
+  }
+  
+  if (!Array.isArray(photos) || photos.length === 0) {
+    console.error('❌ Photos non valides ou vides:', photos);
+    feed.innerHTML = '<div class="image-error">Aucune photo à afficher</div>';
     return;
   }
 
-  // Afficher un loader pendant le chargement
-  feed.innerHTML = '<div class="image-loader">Chargement des images...</div>';
+  // Nettoyer et réinitialiser le conteneur
+  feed.innerHTML = '';
+  feed.style.cssText = `
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    padding: 20px 0;
+    width: 100%;
+    opacity: 1;
+    visibility: visible;
+    position: relative;
+    z-index: 1;
+  `;
+
+  // Afficher un loader
+  feed.innerHTML = '<div class="image-loader" style="text-align: center; padding: 40px; color: #666; font-size: 16px;">Chargement des images...</div>';
 
   // Timeout de secours
   const loadingTimeout = setTimeout(() => {
     if (feed.querySelector('.image-loader')) {
-      feed.innerHTML = '<div class="image-error">Chargement trop long - Réessayez</div>';
+      feed.innerHTML = '<div class="image-error" style="text-align: center; padding: 40px; color: #e74c3c; font-size: 16px;">Chargement trop long - Réessayez</div>';
     }
-  }, 10000); // 15 secondes timeout
+  }, 10000);
 
-  // Préchargement amélioré avec gestion d'erreur
-  const loadImages = photos.map(src => {
+  // Préchargement des images
+  const loadImages = photos.map((src, index) => {
     return new Promise((resolve) => {
       const img = new Image();
       img.src = src;
       img.onload = () => {
-        console.log('Image chargée:', src);
-        resolve({src, status: 'loaded'});
+        console.log(`✅ Image ${index + 1}/${photos.length} chargée:`, src);
+        resolve({src, status: 'loaded', index});
       };
       img.onerror = () => {
-        console.error('Erreur chargement image:', src);
-        resolve({src, status: 'error'});
+        console.error(`❌ Erreur image ${index + 1}:`, src);
+        resolve({src, status: 'error', index});
       };
     });
   });
@@ -43,253 +111,313 @@ function initFullWidthFeed(photos) {
     clearTimeout(loadingTimeout);
     const loadedImages = results.filter(img => img.status === 'loaded');
     
-    console.log('Images chargées:', loadedImages.length, '/', photos.length);
+    console.log(`📊 Images chargées: ${loadedImages.length}/${photos.length}`);
     
     if (loadedImages.length === 0) {
-      feed.innerHTML = '<div class="image-error">Aucune image n\'a pu être chargée</div>';
+      feed.innerHTML = '<div class="image-error" style="text-align: center; padding: 40px; color: #e74c3c; font-size: 16px;">Aucune image n\'a pu être chargée</div>';
       return;
     }
 
-    // Création du HTML avec lazy loading
-    feed.innerHTML = loadedImages.map(img => `
-      <div class="image-container">
+    // Création du HTML avec styles inline pour éviter les conflits CSS
+    feed.innerHTML = loadedImages.map((img, index) => `
+      <div class="image-container" style="
+        width: 90%;
+        max-width: 800px;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.5s ease;
+        overflow: hidden;
+        margin-bottom: 20px;
+      ">
         <img 
           src="${img.src}" 
-          alt="Photo du projet" 
+          alt="Photo du projet ${index + 1}" 
           loading="lazy"
-          onload="this.parentElement.classList.add('loaded')"
-          onerror="this.parentElement.classList.add('error')"
+          onclick="openImageModal('${img.src}')"
+          style="
+            width: 100%;
+            height: auto;
+            display: block;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+          "
+          onmouseover="this.style.transform='scale(1.02)'"
+          onmouseout="this.style.transform='scale(1)'"
         >
       </div>
     `).join('');
 
-    // Ajouter la classe loaded immédiatement pour les images déjà chargées
+    // Animation progressive d'apparition
     setTimeout(() => {
-      document.querySelectorAll('.image-container').forEach(container => {
-        container.classList.add('loaded');
+      const containers = feed.querySelectorAll('.image-container');
+      containers.forEach((container, index) => {
+        setTimeout(() => {
+          container.style.opacity = '1';
+          container.style.transform = 'translateY(0)';
+        }, index * 150);
       });
     }, 100);
 
+    console.log('✅ Galerie initialisée avec succès');
+
   }).catch(error => {
-    console.error('Erreur de chargement des images:', error);
-    feed.innerHTML = '<div class="image-error">Erreur de chargement</div>';
+    console.error('❌ Erreur de chargement des images:', error);
+    feed.innerHTML = '<div class="image-error" style="text-align: center; padding: 40px; color: #e74c3c; font-size: 16px;">Erreur de chargement</div>';
   });
 }
 
+// Fonction d'initialisation du CD 3D - ISOLÉE et sécurisée
+function init3DCD() {
+  console.log('🎵 Initialisation CD 3D');
+  
+  setTimeout(() => {
+    const box = document.querySelector('#box');
+    if (box) {
+      // Supprimer les anciens event listeners pour éviter les accumulations
+      const newBox = box.cloneNode(true);
+      box.parentNode.replaceChild(newBox, box);
+      
+      newBox.style.transformOrigin = 'center center';
+      
+      newBox.addEventListener('mouseenter', function() {
+        this.style.animationPlayState = 'paused';
+      });
+      
+      newBox.addEventListener('mouseleave', function() {
+        this.style.animationPlayState = 'running';
+      });
+      
+      console.log('✅ CD 3D initialisé');
+    }
+  }, 150);
+}
+
+// Fonction pour extraire les URLs de photos du jsContent
+function extractPhotoUrlsFromJS(jsContent) {
+  if (!jsContent) return null;
+  
+  try {
+    const match = jsContent.match(/initFullWidthFeed\(\[(.*?)\]\)/s);
+    if (match && match[1]) {
+      // Nettoyer et parser les URLs
+      const urlsString = match[1]
+        .replace(/\s+/g, ' ')
+        .trim()
+        .split(',')
+        .map(url => url.trim().replace(/['"]/g, ''))
+        .filter(url => url.length > 0);
+      
+      console.log('📸 URLs extraites:', urlsString);
+      return urlsString;
+    }
+  } catch (error) {
+    console.error('❌ Erreur parsing URLs:', error);
+  }
+  
+  return null;
+}
+
+// Données des projets
 const projects = [
   {
     id: 5,
     title: "Pochette CD 3D",
     shortDescription: "Animation 3D interactive",
     description: "Dans le cadre d'un projet à l'école, on devait créer la pochette d'un artiste. J'ai choisi la cover réalisée par une artiste, puis de la transformer en y ajoutant mes propres éléments. J'ai travaillé en mélangeant mes propres dessins et textures avec des retouches, en passant par Illustrator, InDesign et Photoshop. Je voulais trouver une façon originale de présenter ma cover. Comme je cherchais aussi à ajouter de la 3D à mon portfolio, ce projet a été l'occasion parfaite pour expérimenter la modélisation via le code et montrer une autre une version de la pochette.",
-    image: "https://i.pinimg.com/736x/44/d7/ef/44d7ef24279af92d74609d6885f6ffee.jpg",
+    image: "https://res.cloudinary.com/diai5g2u8/image/upload/v1756480876/mock_up_cd_azgypx.jpg",
     type: "interactive",
     
     htmlContent: `
       <div class="interactive-project-layout">
-    <div class="cd-container">
-      <section id="wrap">
-        <div id="box">
-          <div id="front"></div>
-          <div id="cd"></div>
-          <div id="back"></div>
-          <div id="left"></div>
-          <div id="right"></div>
-          <div id="top"></div>
-          <div id="bottom"></div>
-        </div>  
-      </section>
-    </div>
-
-    <div class="full-photo-feed"></div>
-  </div>
-`,
+        <div class="cd-container">
+          <section id="wrap">
+            <div id="box">
+              <div id="front"></div>
+              <div id="cd"></div>
+              <div id="back"></div>
+              <div id="left"></div>
+              <div id="right"></div>
+              <div id="top"></div>
+              <div id="bottom"></div>
+            </div>  
+          </section>
+        </div>
+        <div class="full-photo-feed"></div>
+      </div>
+    `,
+    
     cssContent: `
-    
-    /* CD 3D Styles */
-    :root {
-      --box-color: #222;
-    }
-    
-    #wrap {
-      perspective: 800px;
-      width: 280px;
-      height: 280px;
-      margin: 55px 0 auto;
-    }
-    
-    #box {
-      width: 100%;
-      height: 100%;
-      transform-style: preserve-3d;
-      animation: spinaround 8s infinite linear;
-    }
-    
-    #box > div {
-      position: absolute;
-      width: 280px;
-      height: 280px;
-      overflow: hidden;
-    }
-    
-    div#front {
-      background: var(--box-color);
-      background-image: url('https://i.pinimg.com/736x/71/d0/ba/71d0baded86ebf7a90c6510543db5576.jpg');
-      background-size: cover;
-    }
-    
-    div#back { 
-      background: var(--box-color);
-      transform: translateZ(-8px) rotateY(180deg);
-      background-image: url('https://i.pinimg.com/736x/61/04/ad/6104adf2e7ed6afa9a73f386166368a1.jpg');
-      background-size: cover;
-    }
-    
-    div#cd {
-      transform: translateZ(-4px) translateX(100px);
-      border-radius: 280px;
-      box-shadow: 0 0 0 4px silver inset,
-                  0 0 0 80px #f6f6f6 inset,
-                  0 0 0 84px silver inset,
-                  0 0 0 112px rgba(255,255,255,0.25) inset;
-      background-image: url('https://i.pinimg.com/736x/44/d7/ef/44d7ef24279af92d74609d6885f6ffee.jpg');
-      background-size: cover;
-    }
-    
-    div#left, div#right { 
-      background: var(--box-color);
-      width: 8px;
-      transform: translateZ(-4px) rotateY(90deg);
-      background-image: url('https://i.pinimg.com/736x/44/d7/ef/44d7ef24279af92d74609d6885f6ffee.jpg');
-      background-size: cover;
-    }
-    
-    div#left { left: -4px; }
-    div#right { left: 272px; }
-    
-    div#top, div#bottom { 
-      background: var(--box-color);
-      height: 8px;
-      transform: translateZ(-4px) rotateX(90deg);
-    }
-    
-    div#top { top: -4px; }
-    div#bottom { top: 272px; }
-    
-    @keyframes spinaround {
-      to { transform: rotateY(360deg); }
-    }
-    
-  
-/* Media Queries pour le responsive */
-@media (max-width: 992px) {
-  .interactive-project-layout {
-    flex-direction: column;
-    padding: 20px;
-  }
-  
-  .cd-container-wrapper,
-  .project-gallery-wrapper {
-    flex: 0 0 100%;
-    width: 100%;
-    padding: 0;
-    margin-bottom: 40px;
-    justify-content: center; /* Centre horizontalement */
-    align-items: center;    
-  }
-  
-  #wrap {
-    margin-bottom: 30px;
-  }
-}
-
-    
-
-    @media (max-width: 576px) {
-      #box {
-        animation: none;
-        transform: rotateY(30deg);
-      }
-
-      #wrap {
-        width: 220px;
-        height: 220px;
+      /* Styles CD 3D - NAMESPACE pour éviter les conflits */
+      .project-detail[data-project-id="5"] {
+        --box-color: #222;
       }
       
-      #box > div {
-        width: 220px;
-        height: 220px;
+      .project-detail[data-project-id="5"] .interactive-project-layout {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 40px;
+        padding: 20px;
       }
-
-      div#left, div#right {
-        width: 6px;
+      
+      .project-detail[data-project-id="5"] #wrap {
+        perspective: 800px;
+        width: 280px;
+        height: 280px;
+        margin: 20px auto;
+      }
+      
+      .project-detail[data-project-id="5"] #box {
+        width: 100%;
+        height: 100%;
+        transform-style: preserve-3d;
+        animation: spinaround 8s infinite linear;
+      }
+      
+      .project-detail[data-project-id="5"] #box > div {
+        position: absolute;
+        width: 280px;
+        height: 280px;
+        overflow: hidden;
+      }
+      
+      .project-detail[data-project-id="5"] div#front {
         background: var(--box-color);
-        display: block !important;
+        background-image: url('https://i.pinimg.com/736x/71/d0/ba/71d0baded86ebf7a90c6510543db5576.jpg');
+        background-size: cover;
       }
       
-      div#left { left: -3px; }
-      div#right { left: 217px; }
-
-      div#cd {
-        transform: translateZ(-3px) translateX(70px);
-        box-shadow: 0 0 0 3px silver inset,
-                    0 0 0 60px #f6f6f6 inset,
-                    0 0 0 63px silver inset,
-                    0 0 0 85px rgba(255,255,255,0.25) inset;
+      .project-detail[data-project-id="5"] div#back { 
+        background: var(--box-color);
+        transform: translateZ(-8px) rotateY(180deg);
+        background-image: url('https://i.pinimg.com/736x/61/04/ad/6104adf2e7ed6afa9a73f386166368a1.jpg');
+        background-size: cover;
+      }
+      
+      .project-detail[data-project-id="5"] div#cd {
+        transform: translateZ(-4px) translateX(100px);
+        border-radius: 280px;
+        box-shadow: 0 0 0 4px silver inset,
+                    0 0 0 80px #f6f6f6 inset,
+                    0 0 0 84px silver inset,
+                    0 0 0 112px rgba(255,255,255,0.25) inset;
+        background-image: url('https://i.pinimg.com/736x/44/d7/ef/44d7ef24279af92d74609d6885f6ffee.jpg');
+        background-size: cover;
+      }
+      
+      .project-detail[data-project-id="5"] div#left, 
+      .project-detail[data-project-id="5"] div#right { 
+        background: var(--box-color);
+        width: 8px;
+        transform: translateZ(-4px) rotateY(90deg);
+        background-image: url('https://i.pinimg.com/736x/44/d7/ef/44d7ef24279af92d74609d6885f6ffee.jpg');
+        background-size: cover;
+      }
+      
+      .project-detail[data-project-id="5"] div#left { left: -4px; }
+      .project-detail[data-project-id="5"] div#right { left: 272px; }
+      
+      .project-detail[data-project-id="5"] div#top, 
+      .project-detail[data-project-id="5"] div#bottom { 
+        background: var(--box-color);
+        height: 8px;
+        transform: translateZ(-4px) rotateX(90deg);
+      }
+      
+      .project-detail[data-project-id="5"] div#top { top: -4px; }
+      .project-detail[data-project-id="5"] div#bottom { top: 272px; }
+      
+      @keyframes spinaround {
+        to { transform: rotateY(360deg); }
       }
 
-      div#top, div#bottom {
-        display: none;
-      }
-
-      #wrap {
-        filter: drop-shadow(3px 3px 6px rgba(0,0,0,0.3));
-      }
-    }
-
-
-  body, html {
-    margin: 0;
-    padding: 0;
-    gap: 20%
-  }
-
-  .full-photo-feed {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .full-photo-feed img {
-    width: 100%;
-    height: auto;
-    display: block;
-  }
-`,
-    jsContent: `
-    function init3DCD() {
-      setTimeout(() => {
-        const box = document.querySelector('#box');
-        if (box) {
-          box.style.transformOrigin = 'center center';
-          box.addEventListener('mouseenter', () => {
-            box.style.animationPlayState = 'paused';
-          });
-          box.addEventListener('mouseleave', () => {
-            box.style.animationPlayState = 'running';
-          });
+      @media (max-width: 576px) {
+        .project-detail[data-project-id="5"] #box {
+          animation: none;
+          transform: rotateY(30deg);
         }
-      }, 100);
-    }
-  
-    initFullWidthFeed([
-      "mockup pochette1.jpg",
-      "https://res.cloudinary.com/diai5g2u8/image/upload/v1755268100/mock_up_cd_iiiz03.jpg",
-      "mock.png",
-    ]);
-  
-    init3DCD();
-  `
+
+        .project-detail[data-project-id="5"] #wrap {
+          width: 220px;
+          height: 220px;
+        }
+        
+        .project-detail[data-project-id="5"] #box > div {
+          width: 220px;
+          height: 220px;
+        }
+
+        .project-detail[data-project-id="5"] div#left, 
+        .project-detail[data-project-id="5"] div#right {
+          width: 6px;
+        }
+        
+        .project-detail[data-project-id="5"] div#left { left: -3px; }
+        .project-detail[data-project-id="5"] div#right { left: 217px; }
+
+        .project-detail[data-project-id="5"] div#cd {
+          transform: translateZ(-3px) translateX(70px);
+          box-shadow: 0 0 0 3px silver inset,
+                      0 0 0 60px #f6f6f6 inset,
+                      0 0 0 63px silver inset,
+                      0 0 0 85px rgba(255,255,255,0.25) inset;
+        }
+
+        .project-detail[data-project-id="5"] div#top, 
+        .project-detail[data-project-id="5"] div#bottom {
+          display: none;
+        }
+
+        .project-detail[data-project-id="5"] #wrap {
+          filter: drop-shadow(3px 3px 6px rgba(0,0,0,0.3));
+        }
+      }
+    `,
+    
+    jsContent: `
+      initFullWidthFeed([
+        "https://res.cloudinary.com/diai5g2u8/image/upload/v1756480882/mockup_pochette1_nmwmia.jpg",
+        "https://res.cloudinary.com/diai5g2u8/image/upload/v1755268100/mock_up_cd_iiiz03.jpg",
+        "https://res.cloudinary.com/diai5g2u8/image/upload/v1756480837/mock_klwezr.png"
+      ]);
+      
+      init3DCD();
+    `
+  },
+  {
+    id: 8,
+    title: "Salle d'Arcade Memphis - Blender",
+    shortDescription: "Modélisation 3D d'une salle d'arcade",
+    description: "Dans le cadre d'un workshop d'une semaine, nous avons été amenés à créer un objet 3D inspiré du mouvement Memphis, j'ai donc réalisé une salle d'arcade. Une fusion entre le design Memphis (années 80) et l'esthétique rétro des salles d'arcade (années 70-80).",
+    image: "https://res.cloudinary.com/diai5g2u8/image/upload/v1755268932/blender2_gqjowv.jpg",
+    type: "interactive",
+    
+    htmlContent: `<div class="full-photo-feed"></div>`,
+    
+    cssContent: `
+      .project-detail[data-project-id="8"] .full-photo-feed {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        padding: 20px 0;
+      }
+
+      .project-detail[data-project-id="8"] .full-photo-feed img {
+        width: 90%;
+        height: auto;
+        display: block;
+      }
+    `,
+
+    jsContent: `
+      initFullWidthFeed([
+        "https://res.cloudinary.com/diai5g2u8/image/upload/v1755268007/blende1_lzzmaq.jpg",
+        "https://res.cloudinary.com/diai5g2u8/image/upload/v1755268007/1_sjrgpx.jpg",
+        "https://res.cloudinary.com/diai5g2u8/image/upload/v1755268932/blender2_gqjowv.jpg",
+        "https://res.cloudinary.com/diai5g2u8/image/upload/v1755268933/blender3_hzfgcb.jpg"
+      ]);
+    `
   },
   {
     id: 1,
@@ -308,62 +436,6 @@ const projects = [
     image: "https://i.pinimg.com/736x/a6/f6/a5/a6f6a56d4ccbda600e2b1b8eb2375b63.jpg",
     youtubeUrl: "https://youtu.be/w0Y67OLJz8U",
     type: "video"
-   
-  },
-  {
-    id: 2,
-    title: "Salle d'Arcade Memphis - Blender",
-    shortDescription: "Modélisation 3D d'une salle d'arcade",
-    description: "Dans le cadre d'un workshop d'une semaine, nous avons été amenés à créer un objet 3D inspiré du mouvement Memphis, j'ai donc réalisé une salle d'arcade. Une fusion entre le design Memphis (années 80) et l'esthétique rétro des salles d'arcade (années 70-80).",
-    image: "https://i.pinimg.com/736x/95/26/ab/9526ab794482e94d1ea4adaa0febac98.jpg",
-    type: "interactive" ,
-    htmlContent: `
-
-    <div class="full-photo-feed"></div>
-    </div>
-    `,
-    cssContent: `
-      body, html {
-      margin: 0;
-      padding: 0;
-      }
-
-      .full-photo-feed {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 20px; /* Espace augmenté entre les photos */
-      }
-
-      .full-photo-feed img {
-      width: 90%;
-      height: auto;
-      display: block;
-      }
-      `,
-      jsContent: `
-      function initFullWidthFeed(photos) {
-      const feed = document.querySelector('.full-photo-feed');
-      if (!feed || !Array.isArray(photos)) return;
-
-      feed.innerHTML = photos.map(src => 
-        \`<img src="\${src}" alt="Photo du projet">\`
-      ).join('');
-      }
-
-
-
-      initFullWidthFeed([
-      "https://res.cloudinary.com/diai5g2u8/image/upload/v1755268007/blende1_lzzmaq.jpg",
-      "https://res.cloudinary.com/diai5g2u8/image/upload/v1755268007/1_sjrgpx.jpg",
-      "https://res.cloudinary.com/diai5g2u8/image/upload/v1755268932/blender2_gqjowv.jpg",
-      "https://res.cloudinary.com/diai5g2u8/image/upload/v1755268933/blender3_hzfgcb.jpg",
-
-           
-      ]);
-
-      init3DCD();
-      `
   },
   {
     id: 6,
@@ -375,67 +447,38 @@ const projects = [
     type: "video"
   },
   {
-    id: 4,
+    id: 10,
     title: "Photographie",
     shortDescription: "Découvrez mes photos",
     description: "La photographie est une de mes passions. C'est un moyen de m'exprimer et de partager ma vision du monde. Elle nourrit ma créativité, stimule mon imagination et m'encourage à explorer de nouveaux horizons.",
     image: "https://i.pinimg.com/564x/79/4b/0f/794b0fff82b5959d1cdc64c29fd88b57.jpg",
     type: "interactive",
-   // HTML dans htmlContent
-htmlContent: `
-
-<div class="full-photo-feed"></div>
-</div>
-`,
-cssContent: `
-body, html {
-margin: 0;
-padding: 0;
-}
-
-.full-photo-feed {
-display: flex;
-flex-direction: column;
-align-items: center;
-gap: 20px; /* Espace augmenté entre les photos */
-}
-
-.full-photo-feed img {
-width: 90%;
-height: auto;
-display: block;
-}
-`,
-jsContent: `
-
- function initFullWidthFeed(photos) {
-      const feed = document.querySelector('.full-photo-feed');
-      if (!feed || !Array.isArray(photos)) return;
-
-      feed.innerHTML = photos.map(src => 
-        \`<img src="\${src}" alt="Photo du projet">\`
-      ).join('');
+    
+    htmlContent: `<div class="full-photo-feed"></div>`,
+    
+    cssContent: `
+      .project-detail[data-project-id="10"] .full-photo-feed {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        padding: 20px 0;
       }
 
-  initFullWidthFeed([
-      "https://i.pinimg.com/736x/87/e5/ce/87e5ce65acde203b14024090af10d015.jpg",
-      "https://i.pinimg.com/736x/89/8e/8b/898e8b2fab7726fd3d363bf4da05d0b2.jpg",
-      "https://i.pinimg.com/736x/38/9e/ee/389eee4f1d0006132a69325dc767a5bc.jpg",
-      "https://i.pinimg.com/736x/eb/c7/54/ebc75472fd5db45d314b9b7930b8c9a7.jpg",
-      "https://i.pinimg.com/736x/ef/db/b0/efdbb0a9663caf99bd4dbab607ddb76a.jpg",
-      "https://i.pinimg.com/736x/4a/30/d3/4a30d33d0a5dbb596748268aac89c9c1.jpg",
-      "https://i.pinimg.com/474x/39/06/b2/3906b24eb56c586598f8525a9e9d59f2.jpg",
-      "https://i.pinimg.com/736x/46/80/a3/4680a34b53f0826916f6f64810567979.jpg",
-      "https://i.pinimg.com/736x/2f/c8/db/2fc8dbfbc502ae04291b59d613898c20.jpg",
-      "https://i.pinimg.com/736x/bf/17/2d/bf172d76f3c9259386e41d5b25f969f6.jpg",
-      "https://i.pinimg.com/736x/37/a8/ba/37a8ba1aceed2f170305d2ced22da4f8.jpg",
-      "https://i.pinimg.com/736x/53/b9/a6/53b9a67e07bda74411dff4cc28e3a1eb.jpg",
-      "https://res.cloudinary.com/diai5g2u8/image/upload/v1755269113/DSC05395_2_dpdazp.jpg",
-      "https://res.cloudinary.com/diai5g2u8/image/upload/v1755269114/IMG_3410_s2joqt.jpg",
-  ]);
+      .project-detail[data-project-id="10"] .full-photo-feed img {
+        width: 90%;
+        height: auto;
+        display: block;
+      }
+    `,
 
-      init3DCD();
-      `
+    jsContent: `
+      initFullWidthFeed([
+        "https://res.cloudinary.com/diai5g2u8/image/upload/v1755269114/IMG_3410_s2joqt.jpg",
+        "https://res.cloudinary.com/diai5g2u8/image/upload/v1755269113/DSC05395_2_dpdazp.jpg",
+        "https://res.cloudinary.com/diai5g2u8/image/upload/v1756470817/DSC05021_Original_pekuce.jpg"
+      ]);
+    `
   },
   {
     id: 7,
@@ -445,41 +488,8 @@ jsContent: `
     image: "https://i.pinimg.com/736x/8d/2c/07/8d2c07207fbcbbecd3345aab8edcea95.jpg",
     youtubeUrl: "https://youtu.be/GEJAIFJmWhQ",
     type: "video"
-  }  
-];
-
-function initFullWidthFeed(photos) {
-  const feed = document.querySelector('.full-photo-feed');
-  if (!feed || !Array.isArray(photos)) return;
-
-  // Nouvelle version avec lazy loading
-  feed.innerHTML = photos.map(src => 
-    `<img src="" data-src="${src}" alt="Photo du projet" loading="lazy" class="lazy-image">`
-  ).join('');
-
-  // Observer pour le lazy loading
-  if ('IntersectionObserver' in window) {
-    const lazyImageObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const lazyImage = entry.target;
-          lazyImage.src = lazyImage.dataset.src;
-          lazyImage.classList.remove('lazy-image');
-          lazyImageObserver.unobserve(lazyImage);
-        }
-      });
-    });
-
-    document.querySelectorAll('.lazy-image').forEach(lazyImage => {
-      lazyImageObserver.observe(lazyImage);
-    });
-  } else {
-    // Fallback pour les navigateurs qui ne supportent pas IntersectionObserver
-    document.querySelectorAll('.lazy-image').forEach(lazyImage => {
-      lazyImage.src = lazyImage.dataset.src;
-    });
   }
-}
+];
 
 // Enhanced Photo Gallery Class - VERSION CORRIGÉE
 class EnhancedPhotoGallery {
@@ -509,254 +519,14 @@ class EnhancedPhotoGallery {
 
   init() {
     if (this.isInitialized) return;
-    
-    console.log('Initialisation de la galerie avec', this.photos.length, 'photos');
-    this.createGalleryHTML();
-    this.bindEvents();
     this.isInitialized = true;
-    
-    if (this.options.autoPlay) {
-      this.startAutoPlay();
-    }
-    
-    if (this.options.enableSwipe) {
-      this.enableSwipeGestures();
-    }
-  }
-
-  createGalleryHTML() {
-    if (!this.container) {
-      return;
-    }
-
-    this.container.innerHTML = `
-      <div class="enhanced-gallery">
-        <div class="gallery-main">
-          <div class="gallery-display">
-          </div>
-        </div>
-        
-        ${this.options.showCounter ? `
-        
-        ` : ''}
-        
-        ${this.options.showThumbnails && this.photos.length > 1 ? `
-          <div class="gallery-thumbnails">
-            ${this.photos.map((photo, index) => `
-              </div>
-            `).join('')}
-          </div>
-        ` : ''}
-      </div>
-    `;
-
-    // Ajouter les styles si ils ne sont pas déjà présents
-    if (!document.querySelector('#enhanced-gallery-styles')) {
-      const style = document.createElement('style');
-      style.id = 'enhanced-gallery-styles';
-      style.textContent = `
-        . body, html {
-          margin: 0;
-          padding: 0;
-        }
-
-  .full-photo-feed {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .full-photo-feed img {
-    width: 100%;
-    height: auto;
-    display: block;
-  }
-      `;
-      document.head.appendChild(style);
-    }
-  }
-  
-  handleKeydown(e) {
-    // Vérifier que la galerie est visible
-    if (!this.container.offsetParent) return;
-    
-    if (e.key === 'ArrowLeft') {
-      e.preventDefault();
-      this.previousPhoto();
-    }
-    if (e.key === 'ArrowRight') {
-      e.preventDefault();
-      this.nextPhoto();
-    }
-    if (e.key === 'Escape') {
-      this.closeFullscreen();
-    }
-  }
-
-  startAutoPlay() {
-    if (this.autoPlayInterval) {
-      clearInterval(this.autoPlayInterval);
-    }
-    
-    this.autoPlayInterval = setInterval(() => {
-      this.nextPhoto();
-    }, this.options.autoPlayDelay);
-    
-    console.log('AutoPlay démarré');
-  }
-
-  pauseAutoPlay() {
-    if (this.autoPlayInterval) {
-      clearInterval(this.autoPlayInterval);
-      this.autoPlayInterval = null;
-      console.log('AutoPlay mis en pause');
-    }
-  }
-
-  resumeAutoPlay() {
-    if (this.options.autoPlay && !this.autoPlayInterval) {
-      this.startAutoPlay();
-    }
-  }
-
-  enableSwipeGestures() {
-    let startX = 0;
-    let startY = 0;
-
-    const gallery = this.container.querySelector('.gallery-main');
-    if (!gallery) return;
-
-    const handleTouchStart = (e) => {
-      startX = e.touches[0].clientX;
-      startY = e.touches[0].clientY;
-    };
-
-    const handleTouchEnd = (e) => {
-      const endX = e.changedTouches[0].clientX;
-      const endY = e.changedTouches[0].clientY;
-      
-      const deltaX = startX - endX;
-      const deltaY = startY - endY;
-
-      if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
-        if (deltaX > 0) {
-          this.nextPhoto();
-        } else {
-          this.previousPhoto();
-        }
-      }
-    };
-
-    gallery.addEventListener('touchstart', handleTouchStart, { passive: true });
-    gallery.addEventListener('touchend', handleTouchEnd, { passive: true });
-  }
-
-  openFullscreen() {
-    console.log('Ouverture fullscreen');
-    
-    const modal = document.createElement('div');
-    modal.className = 'gallery-fullscreen-modal';
-    modal.innerHTML = `
-      <div class="fullscreen-overlay">
-        <img src="${this.photos[this.currentIndex]}" alt="Photo en plein écran">
-        <button class="fullscreen-close">&times;</button>
-        <button class="fullscreen-prev">‹</button>
-        <button class="fullscreen-next">›</button>
-        <div class="fullscreen-counter">${this.currentIndex + 1} / ${this.photos.length}</div>
-      </div>
-    `;
-
-    document.head.appendChild(style);
-    document.body.appendChild(modal);
-    document.body.style.overflow = 'hidden';
-
-    // Event listeners for fullscreen modal
-    const closeBtn = modal.querySelector('.fullscreen-close');
-    const prevBtn = modal.querySelector('.fullscreen-prev');
-    const nextBtn = modal.querySelector('.fullscreen-next');
-    const overlay = modal.querySelector('.fullscreen-overlay');
-
-    const closeModal = () => {
-      modal.remove();
-      style.remove();
-      document.body.style.overflow = '';
-      document.removeEventListener('keydown', this.fullscreenKeyHandler);
-    };
-
-    this.fullscreenKeyHandler = (e) => {
-      if (e.key === 'Escape') {
-        closeModal();
-      } else if (e.key === 'ArrowLeft') {
-        e.preventDefault();
-        this.fullscreenPrev();
-      } else if (e.key === 'ArrowRight') {
-        e.preventDefault();
-        this.fullscreenNext();
-      }
-    };
-
-    closeBtn.addEventListener('click', closeModal);
-    prevBtn.addEventListener('click', () => this.fullscreenPrev());
-    nextBtn.addEventListener('click', () => this.fullscreenNext());
-    
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) closeModal();
-    });
-
-    document.addEventListener('keydown', this.fullscreenKeyHandler);
-    this.fullscreenModal = { modal, style, closeModal };
-  }
-
-  closeFullscreen() {
-    if (this.fullscreenModal) {
-      this.fullscreenModal.closeModal();
-      this.fullscreenModal = null;
-    }
-  }
-
-  fullscreenPrev() {
-    this.previousPhoto();
-    this.updateFullscreenImage();
-  }
-
-  fullscreenNext() {
-    this.nextPhoto();
-    this.updateFullscreenImage();
-  }
-
-  updateFullscreenImage() {
-    if (this.fullscreenModal) {
-      const img = this.fullscreenModal.modal.querySelector('img');
-      const counter = this.fullscreenModal.modal.querySelector('.fullscreen-counter');
-      
-      if (img) {
-        img.src = this.photos[this.currentIndex];
-        img.alt = `Photo ${this.currentIndex + 1}`;
-      }
-      
-      if (counter) {
-        counter.textContent = `${this.currentIndex + 1} / ${this.photos.length}`;
-      }
-    }
-  }
-
-  destroy() {
-    if (this.autoPlayInterval) {
-      clearInterval(this.autoPlayInterval);
-    }
-    
-    if (this.keydownHandler) {
-      document.removeEventListener('keydown', this.keydownHandler);
-    }
-    
-    this.closeFullscreen();
-    this.isInitialized = false;
+    console.log('Initialisation galerie améliorée');
   }
 }
 
 // Make Windows Draggable
-function makeWindowDraggable(window) {
-  const header = window.querySelector(".window-header");
+function makeWindowDraggable(windowElement) {
+  const header = windowElement.querySelector(".window-header");
   if (!header) return;
   
   let isDragging = false;
@@ -767,10 +537,6 @@ function makeWindowDraggable(window) {
   let xOffset = 0;
   let yOffset = 0;
 
-  header.addEventListener("mousedown", dragStart);
-  document.addEventListener("mousemove", drag);
-  document.addEventListener("mouseup", dragEnd);
-
   function dragStart(e) {
     initialX = e.clientX - xOffset;
     initialY = e.clientY - yOffset;
@@ -780,11 +546,11 @@ function makeWindowDraggable(window) {
       
       const allWindows = document.querySelectorAll(".window");
       allWindows.forEach(w => {
-        if (w !== window) {
+        if (w !== windowElement) {
           w.style.zIndex = "10";
         }
       });
-      window.style.zIndex = "20";
+      windowElement.style.zIndex = "20";
     }
   }
 
@@ -797,12 +563,8 @@ function makeWindowDraggable(window) {
       xOffset = currentX;
       yOffset = currentY;
 
-      setTranslate(currentX, currentY, window);
+      windowElement.style.transform = `translate(${currentX}px, ${currentY}px)`;
     }
-  }
-
-  function setTranslate(xPos, yPos, el) {
-    el.style.transform = `translate(${xPos}px, ${yPos}px)`;
   }
 
   function dragEnd() {
@@ -810,6 +572,10 @@ function makeWindowDraggable(window) {
     initialY = currentY;
     isDragging = false;
   }
+
+  header.addEventListener("mousedown", dragStart);
+  document.addEventListener("mousemove", drag);
+  document.addEventListener("mouseup", dragEnd);
 }
 
 // Create Project Cards
@@ -858,6 +624,7 @@ function createProjectDetailPages() {
     const detailPage = document.createElement("div");
     detailPage.className = "project-detail";
     detailPage.id = `project-${project.id}`;
+    detailPage.setAttribute('data-project-id', project.id); // Ajout de l'attribut pour le namespace CSS
 
     let mediaContent = "";
     
@@ -935,7 +702,69 @@ function extractYoutubeId(url) {
 
 // Global modal function for images
 function openImageModal(imageSrc) {
-  console.log('Ouverture modal image:', imageSrc);
+  console.log('🖼️ Ouverture modal image:', imageSrc);
+  
+  // Créer le style pour le modal
+  const modalStyle = document.createElement('style');
+  modalStyle.id = 'image-modal-styles';
+  modalStyle.textContent = `
+    .image-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay {
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-content {
+      position: relative;
+      max-width: 90%;
+      max-height: 90%;
+    }
+
+    .modal-content img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: -40px;
+      right: 0;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 30px;
+      cursor: pointer;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s ease;
+    }
+
+    .modal-close:hover {
+      background: rgba(255,255,255,0.1);
+      border-radius: 50%;
+    }
+  `;
   
   const modal = document.createElement('div');
   modal.className = 'image-modal';
@@ -948,15 +777,13 @@ function openImageModal(imageSrc) {
     </div>
   `;
   
-
-  
-  document.head.appendChild(style);
+  document.head.appendChild(modalStyle);
   document.body.appendChild(modal);
   document.body.style.overflow = 'hidden';
   
   const closeModal = () => {
     modal.remove();
-    style.remove();
+    modalStyle.remove();
     document.body.style.overflow = '';
     document.removeEventListener('keydown', handleEscape);
   };
@@ -980,35 +807,60 @@ function openImageModal(imageSrc) {
   document.addEventListener('keydown', handleEscape);
 }
 
-// Show Project Detail
+// FONCTION CORRIGÉE - Show Project Detail
 function showProjectDetail(projectId) {
-  console.log('Affichage détail projet:', projectId);
+  console.log('🚀 Affichage détail projet:', projectId);
+  
+  // ÉTAPE 1: Nettoyer complètement l'état précédent
+  if (currentProjectId !== null && currentProjectId !== projectId) {
+    cleanupPreviousProject();
+  }
   
   const detailPage = document.getElementById(`project-${projectId}`);
   if (!detailPage) {
-    console.error('Page détail non trouvée pour le projet:', projectId);
+    console.error('❌ Page détail non trouvée pour le projet:', projectId);
     return;
   }
 
+  // ÉTAPE 2: Cacher toutes les autres pages de détail
+  const allDetailPages = document.querySelectorAll('.project-detail');
+  allDetailPages.forEach(page => {
+    if (page.id !== `project-${projectId}`) {
+      page.classList.remove('active');
+    }
+  });
+
+  // ÉTAPE 3: Afficher la page courante
   detailPage.classList.add("active");
   document.body.style.overflow = "hidden";
   
+  // Mettre à jour le projet courant
+  currentProjectId = projectId;
+  
   const project = projects.find(p => p.id === projectId);
   if (!project) {
-    console.error('Projet non trouvé:', projectId);
+    console.error('❌ Projet non trouvé:', projectId);
     return;
   }
 
-  // Gestion des projets interactifs (comme le CD 3D)
+  // ÉTAPE 4: Gestion spécifique selon le type de projet
   if (project.type === "interactive") {
+    console.log('🎮 Initialisation projet interactif:', project.title);
+    
     setTimeout(() => {
       const container = document.getElementById(`preview-${projectId}`);
       
       if (container && project.htmlContent) {
-        console.log('Injection contenu HTML pour projet interactif');
+        console.log('📝 Injection contenu HTML');
+        
+        // Nettoyer le conteneur avant injection
+        container.innerHTML = '';
+        container.style.cssText = '';
+        
+        // Injecter le HTML
         container.innerHTML = project.htmlContent;
         
-        // Injecter le CSS
+        // ÉTAPE 5: Injecter le CSS de manière isolée
         if (project.cssContent) {
           const existingStyle = document.querySelector(`#project-${projectId}-styles`);
           if (existingStyle) {
@@ -1019,83 +871,55 @@ function showProjectDetail(projectId) {
           style.id = `project-${projectId}-styles`;
           style.textContent = project.cssContent;
           document.head.appendChild(style);
+          
+          // Stocker la référence pour le nettoyage
+          activeProjectStyles.set(projectId, style);
         }
         
-        // Exécuter le JavaScript avec un délai pour s'assurer que le HTML est rendu
+        // ÉTAPE 6: Exécuter le JavaScript après un délai suffisant
         if (project.jsContent) {
           setTimeout(() => {
-            console.log('Exécution JavaScript pour projet interactif');
+            console.log('⚡ Exécution JavaScript du projet');
             try {
-              // Créer une fonction pour exécuter le code dans le bon contexte
+              // S'assurer que toutes les fonctions globales sont disponibles
+              window.initFullWidthFeed = initFullWidthFeed;
+              window.init3DCD = init3DCD;
+              
+              // Exécuter le code dans le contexte global
               const executeCode = new Function(project.jsContent);
               executeCode();
+              
+              console.log('✅ JavaScript exécuté avec succès');
             } catch (error) {
-              console.error('Erreur lors de l\'exécution du JavaScript:', error);
+              console.error('❌ Erreur lors de l\'exécution du JavaScript:', error);
             }
-          }, 200);
+          }, 300); // Délai augmenté pour s'assurer que le DOM est prêt
         }
       }
-    }, 100);
+    }, 150); // Délai pour s'assurer que la page est affichée
   }
   
-  // Gestion des galeries photos
-  else if (project.type === "photo-gallery" && project.photos && project.photos.length > 0) {
-    setTimeout(() => {
-      const galleryContainer = document.getElementById(`gallery-${projectId}`);
-      if (galleryContainer) {
-        console.log('Initialisation galerie photos pour projet:', projectId);
-        
-        // Détruire la galerie existante si elle existe
-        if (galleryContainer.galleryInstance) {
-          galleryContainer.galleryInstance.destroy();
-        }
-        
-        // Créer nouvelle instance
-        const gallery = new EnhancedPhotoGallery(galleryContainer, project.photos, {
-          autoPlay: true,
-          autoPlayDelay: 4000,
-          enableKeyboard: true,
-          enableSwipe: true
-        });
-        
-        // Stocker l'instance pour pouvoir la détruire plus tard
-        galleryContainer.galleryInstance = gallery;
-      }
-    }, 200);
-  }
+  console.log('✅ Projet affiché:', project.title);
 }
 
-// Hide Project Detail
+// FONCTION CORRIGÉE - Hide Project Detail
 function hideProjectDetail(projectId) {
-  console.log('Masquage détail projet:', projectId);
+  console.log('🔙 Masquage détail projet:', projectId);
   
   const detailPage = document.getElementById(`project-${projectId}`);
   if (!detailPage) return;
 
+  // Cacher la page
   detailPage.classList.remove("active");
   document.body.style.overflow = "";
   
-  // Arrêter les vidéos
-  const videos = detailPage.querySelectorAll("video");
-  videos.forEach(video => {
-    video.pause();
-    video.currentTime = 0;
-  });
+  // Nettoyer complètement l'état du projet
+  cleanupPreviousProject();
   
-  // Détruire les galeries
-  const galleryContainers = detailPage.querySelectorAll('.enhanced-gallery-container');
-  galleryContainers.forEach(container => {
-    if (container.galleryInstance) {
-      container.galleryInstance.destroy();
-      container.galleryInstance = null;
-    }
-  });
+  // Reset du projet courant
+  currentProjectId = null;
   
-  // Supprimer les styles du projet
-  const projectStyles = document.querySelector(`#project-${projectId}-styles`);
-  if (projectStyles) {
-    projectStyles.remove();
-  }
+  console.log('✅ Projet fermé et nettoyé');
 }
 
 // Make global functions available
@@ -1103,33 +927,17 @@ window.showProjectDetail = showProjectDetail;
 window.hideProjectDetail = hideProjectDetail;
 window.openImageModal = openImageModal;
 window.EnhancedPhotoGallery = EnhancedPhotoGallery;
+window.initFullWidthFeed = initFullWidthFeed;
+window.init3DCD = init3DCD;
 
 // Initialize everything when DOM is loaded
 document.addEventListener("DOMContentLoaded", function() {
-  console.log('DOM chargé, initialisation...');
+  console.log('🚀 DOM chargé, initialisation...');
   
-  // Popup functionality
-  setTimeout(function() {
-    const popup = document.getElementById("popup");
-    if (popup) {
-      popup.style.display = "flex";
-    }
-  }, Math.floor(Math.random() * (47000 - 34000) + 26000));
-
-  const closeBtn = document.querySelector(".close-btn");
-  if (closeBtn) {
-    closeBtn.addEventListener("click", function() {
-      const popup = document.getElementById("popup");
-      if (popup) {
-        popup.style.display = "none";
-      }
-    });
-  }
-
   // Show all window stacks
   const allStacks = document.querySelectorAll(".about-window-stack, .search-window-stack, .project-window-stack, .cv-window-stack, .contact-window-stack");
   allStacks.forEach(stack => {
-    stack.style.display = "block";
+    if (stack) stack.style.display = "block";
   });
 
   // Display all windows in each stack
@@ -1189,41 +997,20 @@ document.addEventListener("DOMContentLoaded", function() {
     folder.addEventListener("click", () => {
       const section = folder.dataset.section;
       
-      if (section === "about") {
-        const stack = document.querySelector(".about-window-stack");
+      const stacks = {
+        'about': '.about-window-stack',
+        'projects': '.project-window-stack', 
+        'cv': '.cv-window-stack',
+        'contact': '.contact-window-stack'
+      };
+      
+      const stackSelector = stacks[section];
+      if (stackSelector) {
+        const stack = document.querySelector(stackSelector);
         if (stack) {
           stack.style.display = "block";
-          stack.querySelectorAll(".about-window").forEach((win, index) => {
-            win.style.display = "block";
-            win.style.zIndex = 3 - index;
-          });
-        }
-      } 
-      else if (section === "projects") {
-        const stack = document.querySelector(".project-window-stack");
-        if (stack) {
-          stack.style.display = "block";
-          stack.querySelectorAll(".projects-window").forEach((win, index) => {
-            win.style.display = "block";
-            win.style.zIndex = 3 - index;
-          });
-        }
-      }
-      else if (section === "cv") {
-        const stack = document.querySelector(".cv-window-stack");
-        if (stack) {
-          stack.style.display = "block";
-          stack.querySelectorAll(".cv-window").forEach((win, index) => {
-            win.style.display = "block";
-            win.style.zIndex = 3 - index;
-          });
-        }
-      }
-      else if (section === "contact") {
-        const stack = document.querySelector(".contact-window-stack");
-        if (stack) {
-          stack.style.display = "block";
-          stack.querySelectorAll(".contact-window").forEach((win, index) => {
+          const windows = stack.querySelectorAll(".window");
+          windows.forEach((win, index) => {
             win.style.display = "block";
             win.style.zIndex = 3 - index;
           });
@@ -1238,13 +1025,13 @@ document.addEventListener("DOMContentLoaded", function() {
     button.addEventListener("click", (e) => {
       e.stopPropagation();
       
-      const windowElement = button.closest(".section-window, .search-window, .about-window, .projects-window, .cv-window, .contact-window");
+      const windowElement = button.closest(".window");
       if (windowElement) {
-        const stack = windowElement.closest("[class$='-window-stack']") || windowElement.closest(".window-stack");
+        const stack = windowElement.closest(".window-stack");
         
         if (stack) {
           stack.style.display = "none";
-          stack.querySelectorAll(".window, .section-window, .search-window, .about-window, .projects-window, .cv-window, .contact-window").forEach(win => {
+          stack.querySelectorAll(".window").forEach(win => {
             win.style.display = "none";
           });
         } else {
@@ -1284,7 +1071,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   });
   
-  console.log('Initialisation terminée');
+  console.log('✅ Initialisation terminée');
 });
 
 // Animation au scroll
@@ -1294,4 +1081,3 @@ window.addEventListener('scroll', function() {
     gallery.classList.toggle('scrolling-effect', window.scrollY > 100);
   }
 });
-
