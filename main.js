@@ -21,12 +21,8 @@ function closeAllWindowsOnMobile() {
     console.log('📱 Fermeture de toutes les fenêtres sur mobile');
     const allStacks = document.querySelectorAll(".about-window-stack, .search-window-stack, .project-window-stack, .cv-window-stack, .contact-window-stack");
     allStacks.forEach(stack => {
-      if (stack) {
-        stack.style.display = "none";
-        stack.querySelectorAll(".window").forEach(win => {
-          win.style.display = "none";
-        });
-      }
+    
+      
     });
   }
 }
@@ -103,8 +99,8 @@ function initFullWidthFeed(photos) {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 40px;
-    padding: 40px 0;
+    gap: 10px;
+    padding: 8px 0;
     margin-bottom: 10px;
     width: 100%;
     opacity: 1;
@@ -579,7 +575,7 @@ const projects = [
     title: "Bannière Animée LinkedIn",
     shortDescription: "Animation de logo After Effects",
     description: "Pour ce projet je souhaitais mettre mon logo en avant, alors j'ai décidé de créer une bannière LinkedIn qui pourrait le mettre en valeur. C'est pour cela que j'ai créé cette bannière animée via After Effects. Ce projet m'a aidé à consolider mes bases en motion.",
-    image: "https://i.pinimg.com/736x/8d/2c/07/8d2c07207fbcbbecd3345aab8edcea95.jpg",
+    image: "https://res.cloudinary.com/diai5g2u8/image/upload/v1756579912/Capture_d_%C3%A9cran_2025-08-09_%C3%A0_16.31.28_oonmhe.png",
     youtubeUrl: "https://youtu.be/GEJAIFJmWhQ",
     type: "video"
   },
