@@ -10,23 +10,6 @@ function escapeHtml(html) {
   return div.innerHTML;
 }
 
-// Fonction pour détecter si on est sur mobile
-function isMobileDevice() {
-  return window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-}
-
-// Fonction pour fermer toutes les fenêtres sur mobile
-function closeAllWindowsOnMobile() {
-  if (isMobileDevice()) {
-    console.log('📱 Fermeture de toutes les fenêtres sur mobile');
-    const allStacks = document.querySelectorAll(".about-window-stack, .search-window-stack, .project-window-stack, .cv-window-stack, .contact-window-stack");
-    allStacks.forEach(stack => {
-    
-      
-    });
-  }
-}
-
 // Fonction CORRIGÉE pour nettoyer complètement l'état précédent
 function cleanupPreviousProject() {
   console.log('🧹 Nettoyage complet de l\'état précédent...');
@@ -77,7 +60,7 @@ function cleanupPreviousProject() {
   console.log('✅ Nettoyage terminé');
 }
 
-// Fonction AMÉLIORÉE pour initialiser les galeries photos avec plus d'espacement
+// Fonction AMÉLIORÉE pour initialiser les galeries photos
 function initFullWidthFeed(photos) {
   console.log('🖼️ initFullWidthFeed appelée avec:', photos);
   
@@ -93,15 +76,14 @@ function initFullWidthFeed(photos) {
     return;
   }
 
-  // Nettoyer et réinitialiser le conteneur avec plus d'espacement
+  // Nettoyer et réinitialiser le conteneur
   feed.innerHTML = '';
   feed.style.cssText = `
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
-    padding: 8px 0;
-    margin-bottom: 10px;
+    gap: 30px;
+    padding: 20px 0;
     width: 100%;
     opacity: 1;
     visibility: visible;
@@ -146,7 +128,7 @@ function initFullWidthFeed(photos) {
       return;
     }
 
-    // Création du HTML avec styles inline et plus d'espacement
+    // Création du HTML avec styles inline pour éviter les conflits CSS
     feed.innerHTML = loadedImages.map((img, index) => `
       <div class="image-container" style="
         width: 90%;
@@ -155,7 +137,7 @@ function initFullWidthFeed(photos) {
         transform: translateY(20px);
         transition: all 0.2s ease;
         overflow: hidden;
-        margin-bottom: 40px;
+        margin-bottom: 20px;
       ">
         <img 
           src="${img.src}" 
@@ -284,7 +266,8 @@ const projects = [
         display: flex;
         flex-direction: column;
         align-items: center;
-        
+        gap: 40px;
+        padding: 20px;
       }
       
       .project-detail[data-project-id="5"] #wrap {
@@ -354,28 +337,11 @@ const projects = [
       .project-detail[data-project-id="5"] div#top { top: -4px; }
       .project-detail[data-project-id="5"] div#bottom { top: 272px; }
       
-      /* Espacement amélioré pour la description */
-      .project-detail[data-project-id="5"] .project-description-container {
-        margin-top: 120px;
-        padding-top: 60px;
-        border-top: 1px solid rgba(0,0,0,0.1);
-      }
-      
       @keyframes spinaround {
         to { transform: rotateY(360deg); }
       }
 
-      @media (max-width: 768px) {
-        .project-detail[data-project-id="5"] .interactive-project-layout {
-          gap: 40px;
-          margin-bottom: 80px;
-        }
-        
-        .project-detail[data-project-id="5"] .project-description-container {
-          margin-top: 80px;
-          padding-top: 40px;
-        }
-        
+      @media (max-width: 576px) {
         .project-detail[data-project-id="5"] #box {
           animation: none;
           transform: rotateY(30deg);
@@ -443,34 +409,14 @@ const projects = [
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 30px;
-        padding: 40px 0 80px 0;
-        margin-bottom: 120px;
+        gap: 20px;
+        padding: 20px 0;
       }
 
       .project-detail[data-project-id="8"] .full-photo-feed img {
         width: 90%;
         height: auto;
         display: block;
-        margin-bottom: 20px;
-      }
-      
-      .project-detail[data-project-id="8"] .project-description-container {
-        margin-top: 100px;
-        padding-top: 50px;
-        border-top: 1px solid rgba(0,0,0,0.1);
-      }
-      
-      @media (max-width: 768px) {
-        .project-detail[data-project-id="8"] .full-photo-feed {
-          padding: 30px 0 60px 0;
-          margin-bottom: 80px;
-        }
-        
-        .project-detail[data-project-id="8"] .project-description-container {
-          margin-top: 60px;
-          padding-top: 30px;
-        }
       }
     `,
 
@@ -487,45 +433,25 @@ const projects = [
     id: 12,
     title: "Underdog",
     shortDescription: "Création de visuels et gestion de contenus web pour UnderDog.",
-    description: "Lors de mon stage chez UnderDog, j'ai participé à la gestion des annonces en ligne : je prenais en photo les appareils, les détourais puis préparais leur mise en page avant publication. J'ai également conçu plusieurs visuels graphiques à l'aide d'Illustrator et contribué à la mise en ligne du site sur WordPress.",
+    description: "Lors de mon stage chez UnderDog, j’ai participé à la gestion des annonces en ligne : je prenais en photo les appareils, les détourais puis préparais leur mise en page avant publication. J’ai également conçu plusieurs visuels graphiques à l’aide d’Illustrator et contribué à la mise en ligne du site sur WordPress.",
     image: "https://res.cloudinary.com/diai5g2u8/image/upload/v1756575631/Capture_d_%C3%A9cran_2025-08-30_%C3%A0_19.21.13_ashakj.png",
     type: "interactive",
     
     htmlContent: `<div class="full-photo-feed"></div>`,
     
     cssContent: `
-      .project-detail[data-project-id="12"] .full-photo-feed {
+      .project-detail[data-project-id="10"] .full-photo-feed {
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 30px;
-        padding: 40px 0 80px 0;
-        margin-bottom: 120px;
+        gap: 20px;
+        padding: 20px 0;
       }
 
-      .project-detail[data-project-id="12"] .full-photo-feed img {
+      .project-detail[data-project-id="10"] .full-photo-feed img {
         width: 90%;
         height: auto;
         display: block;
-        margin-bottom: 20px;
-      }
-      
-      .project-detail[data-project-id="12"] .project-description-container {
-        margin-top: 100px;
-        padding-top: 50px;
-        border-top: 1px solid rgba(0,0,0,0.1);
-      }
-      
-      @media (max-width: 768px) {
-        .project-detail[data-project-id="12"] .full-photo-feed {
-          padding: 30px 0 60px 0;
-          margin-bottom: 80px;
-        }
-        
-        .project-detail[data-project-id="12"] .project-description-container {
-          margin-top: 60px;
-          padding-top: 30px;
-        }
       }
     `,
 
@@ -575,7 +501,7 @@ const projects = [
     title: "Bannière Animée LinkedIn",
     shortDescription: "Animation de logo After Effects",
     description: "Pour ce projet je souhaitais mettre mon logo en avant, alors j'ai décidé de créer une bannière LinkedIn qui pourrait le mettre en valeur. C'est pour cela que j'ai créé cette bannière animée via After Effects. Ce projet m'a aidé à consolider mes bases en motion.",
-    image: "https://res.cloudinary.com/diai5g2u8/image/upload/v1756579912/Capture_d_%C3%A9cran_2025-08-09_%C3%A0_16.31.28_oonmhe.png",
+    image: "https://i.pinimg.com/736x/8d/2c/07/8d2c07207fbcbbecd3345aab8edcea95.jpg",
     youtubeUrl: "https://youtu.be/GEJAIFJmWhQ",
     type: "video"
   },
@@ -594,34 +520,14 @@ const projects = [
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 30px;
-        padding: 40px 0 80px 0;
-        margin-bottom: 120px;
+        gap: 20px;
+        padding: 20px 0;
       }
 
       .project-detail[data-project-id="10"] .full-photo-feed img {
         width: 90%;
         height: auto;
         display: block;
-        margin-bottom: 20px;
-      }
-      
-      .project-detail[data-project-id="10"] .project-description-container {
-        margin-top: 100px;
-        padding-top: 50px;
-        border-top: 1px solid rgba(0,0,0,0.1);
-      }
-      
-      @media (max-width: 768px) {
-        .project-detail[data-project-id="10"] .full-photo-feed {
-          padding: 30px 0 60px 0;
-          margin-bottom: 80px;
-        }
-        
-        .project-detail[data-project-id="10"] .project-description-container {
-          margin-top: 60px;
-          padding-top: 30px;
-        }
       }
     `,
 
@@ -748,20 +654,14 @@ function createProjectCards() {
       </div>
     `;
     
-    card.addEventListener("click", () => {
-      showProjectDetail(project.id);
-      // Fermer toutes les fenêtres sur mobile quand on ouvre un projet
-      if (isMobileDevice()) {
-        setTimeout(closeAllWindowsOnMobile, 100);
-      }
-    });
+    card.addEventListener("click", () => showProjectDetail(project.id));
     projectsGrid.appendChild(card);
   });
   
   console.log('Cartes de projets créées:', projects.length);
 }
 
-// Create Project Detail Pages avec espacement amélioré
+// Create Project Detail Pages
 function createProjectDetailPages() {
   const container = document.getElementById("project-details");
   if (!container) {
@@ -775,7 +675,7 @@ function createProjectDetailPages() {
     const detailPage = document.createElement("div");
     detailPage.className = "project-detail";
     detailPage.id = `project-${project.id}`;
-    detailPage.setAttribute('data-project-id', project.id);
+    detailPage.setAttribute('data-project-id', project.id); // Ajout de l'attribut pour le namespace CSS
 
     let mediaContent = "";
     
@@ -832,7 +732,7 @@ function createProjectDetailPages() {
       <div class="project-detail-content">
         <h1 class="project-detail-title">${project.title}</h1>
         ${mediaContent}
-        <div class="project-description-container" style="margin-top: 120px; padding-top: 60px; border-top: 1px solid rgba(0,0,0,0.1);">
+        <div class="project-description-container">
           <p class="project-detail-description">${project.description}</p>
         </div>
       </div>
@@ -1134,90 +1034,71 @@ window.EnhancedPhotoGallery = EnhancedPhotoGallery;
 window.initFullWidthFeed = initFullWidthFeed;
 window.init3DCD = init3DCD;
 
-// Gestion des événements de redimensionnement pour mobile
-window.addEventListener('resize', function() {
-  if (isMobileDevice()) {
-    closeAllWindowsOnMobile();
-  }
-});
-
 // Initialize everything when DOM is loaded
 document.addEventListener("DOMContentLoaded", function() {
   console.log('🚀 DOM chargé, initialisation...');
   
-  // Fermer toutes les fenêtres si on est sur mobile dès le chargement
-  if (isMobileDevice()) {
-    setTimeout(closeAllWindowsOnMobile, 500);
-  } else {
-    // Show all window stacks seulement sur desktop
-    const allStacks = document.querySelectorAll(".about-window-stack, .search-window-stack, .project-window-stack, .cv-window-stack, .contact-window-stack");
-    allStacks.forEach(stack => {
-      if (stack) stack.style.display = "block";
+  // Show all window stacks
+  const allStacks = document.querySelectorAll(".about-window-stack, .search-window-stack, .project-window-stack, .cv-window-stack, .contact-window-stack");
+  allStacks.forEach(stack => {
+    if (stack) stack.style.display = "block";
+  });
+
+  // Display all windows in each stack
+  const aboutStack = document.querySelector(".about-window-stack");
+  if (aboutStack) {
+    aboutStack.querySelectorAll(".about-window").forEach((win, index) => {
+      win.style.display = "block";
+      win.style.zIndex = 10 + index;
     });
-
-    // Display all windows in each stack
-    const aboutStack = document.querySelector(".about-window-stack");
-    if (aboutStack) {
-      aboutStack.querySelectorAll(".about-window").forEach((win, index) => {
-        win.style.display = "block";
-        win.style.zIndex = 10 + index;
-      });
-    }
-
-    const projectStack = document.querySelector(".project-window-stack");
-    if (projectStack) {
-      projectStack.querySelectorAll(".projects-window").forEach((win, index) => {
-        win.style.display = "block";
-        win.style.zIndex = 10 + index;
-      });
-    }
-
-    const cvStack = document.querySelector(".cv-window-stack");
-    if (cvStack) {
-      cvStack.querySelectorAll(".cv-window").forEach((win, index) => {
-        win.style.display = "block";
-        win.style.zIndex = 10 + index;
-      });
-    }
-
-    const contactStack = document.querySelector(".contact-window-stack");
-    if (contactStack) {
-      contactStack.querySelectorAll(".contact-window").forEach((win, index) => {
-        win.style.display = "block";
-        win.style.zIndex = 10 + index;
-      });
-    }
-
-    const searchStack = document.querySelector(".search-window-stack");
-    if (searchStack) {
-      searchStack.querySelectorAll(".search-window").forEach((win, index) => {
-        win.style.display = "block";
-        win.style.zIndex = 10 + index;
-      });
-    }
-
-    // Make first project window top priority
-    const firstProjectWindow = document.querySelector(".project-window-stack .projects-window");
-    if (firstProjectWindow) {
-      firstProjectWindow.style.zIndex = "20";
-    }
   }
 
-  // Make windows draggable (seulement sur desktop)
-  if (!isMobileDevice()) {
-    const windows = document.querySelectorAll(".window, .section-window, .about-window, .projects-window, .cv-window, .contact-window, .search-window");
-    windows.forEach(makeWindowDraggable);
+  const projectStack = document.querySelector(".project-window-stack");
+  if (projectStack) {
+    projectStack.querySelectorAll(".projects-window").forEach((win, index) => {
+      win.style.display = "block";
+      win.style.zIndex = 10 + index;
+    });
   }
+
+  const cvStack = document.querySelector(".cv-window-stack");
+  if (cvStack) {
+    cvStack.querySelectorAll(".cv-window").forEach((win, index) => {
+      win.style.display = "block";
+      win.style.zIndex = 10 + index;
+    });
+  }
+
+  const contactStack = document.querySelector(".contact-window-stack");
+  if (contactStack) {
+    contactStack.querySelectorAll(".contact-window").forEach((win, index) => {
+      win.style.display = "block";
+      win.style.zIndex = 10 + index;
+    });
+  }
+
+  const searchStack = document.querySelector(".search-window-stack");
+  if (searchStack) {
+    searchStack.querySelectorAll(".search-window").forEach((win, index) => {
+      win.style.display = "block";
+      win.style.zIndex = 10 + index;
+    });
+  }
+
+  // Make first project window top priority
+  const firstProjectWindow = document.querySelector(".project-window-stack .projects-window");
+  if (firstProjectWindow) {
+    firstProjectWindow.style.zIndex = "20";
+  }
+
+  // Make windows draggable
+  const windows = document.querySelectorAll(".window, .section-window, .about-window, .projects-window, .cv-window, .contact-window, .search-window");
+  windows.forEach(makeWindowDraggable);
 
   // Folder click functionality
   const folders = document.querySelectorAll(".folder");
   folders.forEach(folder => {
     folder.addEventListener("click", () => {
-      // Sur mobile, ne pas ouvrir les fenêtres via les dossiers
-      if (isMobileDevice()) {
-        return;
-      }
-      
       const section = folder.dataset.section;
       
       const stacks = {
@@ -1277,24 +1158,22 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 
-  // Folder hover effects (seulement sur desktop)
-  if (!isMobileDevice()) {
-    folders.forEach(folder => {
-      folder.addEventListener("mouseenter", () => {
-        const icon = folder.querySelector(".folder-icon");
-        if (icon) {
-          icon.style.transform = "scale(1.1)";
-        }
-      });
-
-      folder.addEventListener("mouseleave", () => {
-        const icon = folder.querySelector(".folder-icon");
-        if (icon) {
-          icon.style.transform = "scale(1)";
-        }
-      });
+  // Folder hover effects
+  folders.forEach(folder => {
+    folder.addEventListener("mouseenter", () => {
+      const icon = folder.querySelector(".folder-icon");
+      if (icon) {
+        icon.style.transform = "scale(1.1)";
+      }
     });
-  }
+
+    folder.addEventListener("mouseleave", () => {
+      const icon = folder.querySelector(".folder-icon");
+      if (icon) {
+        icon.style.transform = "scale(1)";
+      }
+    });
+  });
   
   console.log('✅ Initialisation terminée');
 });
