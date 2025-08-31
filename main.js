@@ -458,7 +458,6 @@ const projects = [
     jsContent: `
       initFullWidthFeed([
         "https://res.cloudinary.com/diai5g2u8/image/upload/v1756575612/Capture_d_%C3%A9cran_2025-08-30_%C3%A0_19.20.38_llrmp6.png",
-        "https://res.cloudinary.com/diai5g2u8/image/upload/v1756575603/Capture_d_%C3%A9cran_2025-08-30_%C3%A0_19.21.29_znjqca.png",
         "https://res.cloudinary.com/diai5g2u8/image/upload/v1756575611/Capture_d_%C3%A9cran_2025-08-30_%C3%A0_19.20.48_bnytps.png",
         "https://res.cloudinary.com/diai5g2u8/image/upload/v1756575603/Capture_d_%C3%A9cran_2025-08-30_%C3%A0_19.21.29_znjqca.png",
         "https://res.cloudinary.com/diai5g2u8/image/upload/v1756575617/Capture_d_%C3%A9cran_2025-08-30_%C3%A0_19.21.42_bsoqyl.png",
