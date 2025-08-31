@@ -644,9 +644,7 @@ h1 {
   width: 100%;
   max-width: 800px;
   margin: 20px auto;
-  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
   }
 
  
@@ -1177,3 +1175,8 @@ h1 {
   }
 }
 
+
+.project-detail .project-description-container {
+  margin-top: 15px !important;    
+  padding-top: 15px !important;     
+}
